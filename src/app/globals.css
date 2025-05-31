@@ -1,8 +1,8 @@
 @import "tailwindcss";
 
 :root {
-  --background: #F7F7FC;  
-  --primaryColor: black; /* Titles/Links 007BFF */
+  --background: #FFFFFF ;  /* FCEFE9 F7F7FC*/
+  --primaryColor: #007BFF; /* Titles/Links 007BFF */
   --navy: #343A40; /* Text */
   --coolGray: #CED4DA; /* Disable Text */
   --coralRed: #FF6B6B; /* Errors */
