@@ -1,9 +1,9 @@
 'use client'
-
+import React, {useState} from "react"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from "zod"
-import { EnvelopeIcon } from '@heroicons/react/24/outline'
+import { EnvelopeIcon, EyeSlashIcon, EyeIcon } from '@heroicons/react/24/outline'
 import './login.css'
 
 // Define form validation schema using Zod
@@ -27,6 +27,7 @@ export default function LoginPage() {
     console.log("Form data:", data)
     // TODO: handle login logic (e.g. call API)
   }
+  const [showPassword, setShowPassword] = useState<boolean>(false)
 
   return (
     <main className="flex flex-col items-center justify-center min-h-screen p-4">
@@ -38,28 +39,40 @@ export default function LoginPage() {
         <label htmlFor="email" className="block mb-1 font-medium">Email</label>
         <div className={`flex-row-center w-full p-2 rounded border shadow-sm ${errors.email ? "border-red-500" : "border-gray-300"}`}>
           <EnvelopeIcon className="h-7 w-7" />
-          <input
-            id="email"
-            type="email"
-            {...register("email")}
-            placeholder="Enter your email"
-            className="w-full pl-2"
-          />
+          <input id="email" type="email" {...register("email")} placeholder="Enter your email" className="w-full pl-2" />
         </div>
         {/* Email error message */}
         {errors.email && <p className="text-red-600 text-sm mt-1">{errors.email.message}</p>}
 
         {/* Password field */}
         <label htmlFor="password" className="block mt-4 mb-1 font-medium">Password</label>
-        <input
-          id="password"
-          type="password"
-          {...register("password")}
-          placeholder="Enter your password"
-          className={`w-full p-2 border rounded shadow-sm ${errors.password ? "border-red-500" : "border-gray-300"}`}
-        />
-        {/* Password error message */}
-        {errors.password && <p className="text-red-600 text-sm mt-1">{errors.password.message}</p>}
+        <div className="relative">
+          <input
+            id="password"
+            type={showPassword ? "text" : "password"} // ✅ toggle visibility
+            {...register("password")}
+            placeholder="Enter your password"
+            className={`w-full p-2 border rounded shadow-sm pr-10 ${
+              errors.password ? "border-red-500" : "border-gray-300"
+            }`}
+          />
+
+          {/* 👁 Toggle visibility button */}
+          <button type="button" onClick={() => setShowPassword((prev: boolean) => !prev)} className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-500" >
+            {showPassword ? (
+              <EyeSlashIcon className="h-5 w-5" />
+            ) : (
+              <EyeIcon className="h-5 w-5" />
+            )}
+          </button>
+        </div>
+
+        {/* Error message */}
+        {errors.password && (
+          <p className="text-red-600 text-sm mt-1">{errors.password.message}</p>
+        )}
+
+        
 
         {/* Remember me & Forgot password section */}
         <div className="flex items-center justify-between mt-4">
@@ -71,10 +84,7 @@ export default function LoginPage() {
         </div>
 
         {/* Submit button */}
-        <button
-          type="submit"
-          className="w-full mt-6 bg-[var(--primaryColor)] text-white py-2 rounded-md hover:bg-blue-700 transition"
-        >
+        <button type="submit" className="w-full mt-6 bg-[var(--primaryColor)] text-white py-2 rounded-md hover:bg-blue-700 transition" >
           Sign in
         </button>
 
