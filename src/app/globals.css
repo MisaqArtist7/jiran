@@ -45,6 +45,9 @@
   input{
     outline: none;
   }
+  input:focus{
+    outline: none;
+  }
   a:hover, button:hover{
     cursor: pointer;
   }

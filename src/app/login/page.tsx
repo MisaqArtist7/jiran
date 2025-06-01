@@ -3,9 +3,9 @@ import React, {useState} from "react"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from "zod"
-import { EnvelopeIcon, EyeSlashIcon, EyeIcon } from '@heroicons/react/24/outline'
+import { EnvelopeIcon } from '@heroicons/react/24/outline'
+import Image from "next/image"
 import './login.css'
-
 // Define form validation schema using Zod
 const loginSchema = z.object({ 
   email: z.string().email("Invalid email address"),
@@ -60,9 +60,9 @@ export default function LoginPage() {
           {/* 👁 Toggle visibility button */}
           <button type="button" onClick={() => setShowPassword((prev: boolean) => !prev)} className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-500" >
             {showPassword ? (
-              <EyeSlashIcon className="h-5 w-5" />
+              <Image src="/images/close.svg" width={25} height={25} alt="" />
             ) : (
-              <EyeIcon className="h-5 w-5" />
+              <Image src="/images/open.svg" width={27} height={27} alt="" />
             )}
           </button>
         </div>
@@ -71,8 +71,6 @@ export default function LoginPage() {
         {errors.password && (
           <p className="text-red-600 text-sm mt-1">{errors.password.message}</p>
         )}
-
-        
 
         {/* Remember me & Forgot password section */}
         <div className="flex items-center justify-between mt-4">
