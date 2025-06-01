@@ -1,7 +1,11 @@
 body{
     background-color: rgb(249, 249, 249);
 }
-/* برای Chrome، Edge و سایر مرورگرهای مبتنی بر WebKit */
+input[type="password"],
+input[type="text"][id*="password"] {
+  /* add your rules here if needed */
+}
+
 input[type="password"]::-ms-reveal,
 input[type="password"]::-ms-clear,
 input[type="password"]::-webkit-credentials-auto-fill-button,

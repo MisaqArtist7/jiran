@@ -60,9 +60,8 @@ export default function Header() {
             <BellAlertIcon className='w-6 h-6'/>
             <span className='absolute -top-1 -right-1 bg-[var(--primaryColor)] text-white rounded-full border border-white w-4 h-4 text-xs flex-row-center'>1</span>
           </a>
-          <a href="" className='hover:bg-[var(--primaryColor)] bg-white border-2 border-[var(--primaryColor)] text-[var(--primaryColor)] rounded-full gap-x-1 py-2.5 pl-3 pr-4 hover:text-white flex-row-center transition-colors duration-150'>
+          <a href="./login" className='hover:bg-[var(--primaryColor)] bg-white border-2 border-[var(--primaryColor)] text-[var(--primaryColor)] rounded-full p-2.5 hover:text-white flex-row-center transition-colors duration-150'>
             <UserIcon className='w-6 h-6'/>
-            profile
           </a>
         </div>
       </nav>

@@ -3,13 +3,14 @@ import React, { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from "zod"
+import Link from 'next/link'
 import { EnvelopeIcon, UserIcon, KeyIcon } from '@heroicons/react/24/outline'
 import Image from 'next/image'
 import './register.css'
 export default function SignUP() {
 
   const signUpSchema = z.object({
-    nickName: z.string().min(8, 'This name has already taken or is invalid'),
+    FullName: z.string().min(8, 'Nickname must be at least 8 characters'),
     email: z.string().email('Invalid email address'),
     password: z.string().min(8, 'Password must be at least 8 characters'),
     confirmPassword: z.string(),
@@ -35,6 +36,7 @@ export default function SignUP() {
     console.log(data) // send to server
   }
   const [showPassword, setShowPassword] = useState<boolean>(false)
+  const [confirmPassword, setConfirmPassword] = useState<boolean>(false)
   return (
     <main className="flex flex-col items-center justify-center min-h-screen p-4">
       {/* Form container */}
@@ -43,15 +45,15 @@ export default function SignUP() {
         <h2 className="text-2xl font-bold mb-6 text-center">Sign up to your account</h2>
 
         {/* Username field */}
-        <label htmlFor="username" className="block mb-1 font-medium">Full Name</label>
-        <div className={`${errors.nickName ? "border-red-500" : "border-gray-300"} flex-row-center w-full p-2 rounded border shadow-sm`}>
+        <label htmlFor="Full Name" className="block mb-1 font-medium">Full Name</label>
+        <div className={`${errors.FullName ? "border-red-500" : "border-gray-300"} flex-row-center w-full p-2 rounded border shadow-sm`}>
           <UserIcon className="h-7 w-7" />
-        <input {...register('nickName')}
-          id="username" type="text" placeholder="Enter your Nickname" className="w-full pl-2"/>
+        <input {...register('FullName')}
+          id="Full Name" type="text" placeholder="Enter your Nickname" className="w-full pl-2"/>
         </div>
         {/* Email error message */}
-        {errors.nickName && (
-          <p className="text-red-600 text-sm mt-1">{errors.nickName.message}</p>
+        {errors.FullName && (
+          <p className="text-red-600 text-sm mt-1">{errors.FullName.message}</p>
         )}
         
         {/* Email field */}
@@ -72,7 +74,7 @@ export default function SignUP() {
           <div className='flex-row-center w-full p-2'>
             <KeyIcon className="h-7 w-7" />
             <input {...register('password')}
-              type={`${showPassword ? 'type' : 'password'}`}
+              type={`${showPassword ? 'text' : 'password'}`}
               id="password"// toggle visibility
               placeholder="Enter your password"
               className={`w-full pl-2`}
@@ -100,14 +102,20 @@ export default function SignUP() {
           <div className='flex-row-center w-full p-2'>
             <KeyIcon className="h-7 w-7" />
             <input {...register('confirmPassword')}
+              type={`${confirmPassword ? 'text' : 'password'}`}
               id="confirmPassword"// toggle visibility
               placeholder="Enter your password"
               className={`w-full pl-2`}
               />
           </div>
           {/* 👁 Toggle visibility button */}
-          <button type="button"  className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-500" >
-
+          <button onClick={() => setConfirmPassword((prev: boolean) => !prev)}
+          type="button"  className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-500" >
+            {confirmPassword ? (
+              <Image src="/images/close.svg" width={25} height={25} alt="" />
+            ) : (
+              <Image src="/images/open.svg" width={25} height={25} alt="" />
+            )}
           </button>
         </div>
         {errors.confirmPassword && (
@@ -137,9 +145,9 @@ export default function SignUP() {
         {/* Sign up link */}
         <p className="text-center mt-4 text-sm">
           Alreay have an account?{" "}
-          <a href="/login" className="text-[var(--primaryColor)] hover:underline">
-            Sign in
-          </a>
+          <Link href="/login" className="text-[var(--primaryColor)] hover:underline">
+            Sign Up
+          </Link>
         </p>
       </form>
     </main>
