@@ -1,5 +1,6 @@
 import React from 'react'
 import Image from 'next/image'
+import Link from 'next/link'
 import './header.css'
 import { UserIcon, HomeIcon, BriefcaseIcon, NewspaperIcon, PhoneIcon, FingerPrintIcon, BellAlertIcon} from '@heroicons/react/24/outline'
 
@@ -23,10 +24,10 @@ export default function Header() {
             {/* Navigation menu */}
             <ul className="header__menu p-3 rounded-full flex items-center gap-x-4">
               <li className="header__menu-item">
-                <a href="#" className='flex-row-center gap-x-1'>
+                <Link href="./" className='flex-row-center gap-x-1'>
                   <HomeIcon className='w-5 h-5'/>
                   Home
-                </a>
+                </Link>
               </li>
               <li className="header__menu-item">
                 <a href="#" className='flex-row-center gap-x-1'>
