@@ -4,12 +4,13 @@ import LocationIcon from '@/components/icons/LocationIcon'
 import LinkedinIcon from '@/components/icons/LinkedinIcon'
 import WhatsappIcon from '@/components/icons/WhatsappIcon'
 import InstagramIcon from '@/components/icons/InstagramIcon'
+import DashboardPost from '@/components/ui/DashboardPost/DashboardPost'
 
 export default function Dashboard() {
   return (
-    <main className='container mt-11'>
+    <main className='container'>
       {/* User info section */}
-      <section className='flex flex-col md:flex-row justify-between items-start md:items-center gap-6'>
+      <section className='flex flex-col md:flex-row justify-between items-start md:items-center gap-6 my-11'>
 
         <div className='flex flex-col justify-center'>
           {/* Profile Info */}
@@ -40,10 +41,12 @@ export default function Dashboard() {
         </div>
       </section>
       {/* posts */}
-      <section>
+      <section className='my-11'>
         <div>top</div>
-        
-        <div>bottom</div>
+
+        <div className='grid grid-cols-4 gap-x-11'>
+          <DashboardPost />
+        </div>
       </section>
     </main>
   )
