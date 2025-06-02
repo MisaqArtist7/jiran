@@ -5,10 +5,6 @@ export const metadata: Metadata = {
 }
 export default function SignUpLayout({children} : Readonly<{children: React.ReactNode}>) {
   return (
-    <html lang='en' dir='ltr'>
-        <body>
-            {children}
-        </body>
-    </html>
+    <main> {children} </main>
   )
 }

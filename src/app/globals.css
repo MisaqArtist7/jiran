@@ -85,3 +85,15 @@ body {
   font-family: Arial, Helvetica, sans-serif;
   background-color: var(--background);
 }
+.NotFound {
+  width: 100%;
+  max-height: 80vh;
+  background: url('/images/404.png') no-repeat center center;
+  background-size: cover;
+  background-clip: content-box;
+  box-sizing: border-box;
+  position: relative;
+  overflow: hidden;
+}
+
+
