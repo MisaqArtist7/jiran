@@ -15,9 +15,9 @@ const icons: { [key: string]: React.ElementType } = {
 export default function DashboardPost() {
   const [posts] = useState([
     { id: 1, title: 'Business', desc: 'Landscaper Position', icon: 'BusinessIcon', bgColor: 'bg-[#1FAF381A]' },
-    { id: 2, title: 'Job', desc: 'Landscaper Position', icon: 'JobIcon', bgColor: 'bg-[#007BFF1A]' },
-    { id: 3, title: 'Needs', desc: 'Landscaper Position', icon: 'NeedsIcon', bgColor: 'bg-[#FFDD551A]' },
-    { id: 4, title: 'Community', desc: 'Landscaper Position', icon: 'CommunityIcon', bgColor: 'bg-[#FF6B6B1A]' },
+    { id: 2, title: 'Job', desc: 'Farmer Assistant All gardening affairs', icon: 'JobIcon', bgColor: 'bg-[#007BFF1A]' },
+    { id: 3, title: 'Needs', desc: 'Lawn Care Help Wanted', icon: 'NeedsIcon', bgColor: 'bg-[#FFDD551A]' },
+    { id: 4, title: 'Community', desc: 'Elmwood Garden Club', icon: 'CommunityIcon', bgColor: 'bg-[#FF6B6B1A]' },
   ])
 
   return (

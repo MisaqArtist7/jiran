@@ -5,6 +5,11 @@ import LinkedinIcon from '@/components/icons/LinkedinIcon'
 import WhatsappIcon from '@/components/icons/WhatsappIcon'
 import InstagramIcon from '@/components/icons/InstagramIcon'
 import DashboardPost from '@/components/ui/DashboardPost/DashboardPost'
+import AllOutlineIcon from '@/components/icons/AllOutlineIcon'
+import BusinessOutlineIcon from '@/components/icons/BusinessOutlineIcon'
+import NeedsOutlineIcon from '@/components/icons/NeedsOutlineIcon'
+import JobOutlineIcon from '@/components/icons/JobOutlineIcon'
+import CommunityOutlineIcon from '@/components/icons/CommunityOutlineIcon'
 
 export default function Dashboard() {
   return (
@@ -42,7 +47,14 @@ export default function Dashboard() {
       </section>
       {/* posts */}
       <section className='my-11'>
-        <div>top</div>
+        <h3>Posts</h3>
+        <div className='flex-row-center gap-x-36 mt-4 mb-7'>
+          <AllOutlineIcon />
+          <BusinessOutlineIcon />
+          <JobOutlineIcon />
+          <NeedsOutlineIcon />
+          <CommunityOutlineIcon />
+        </div>
 
         <div className='grid grid-cols-4 gap-x-11'>
           <DashboardPost />

@@ -1,7 +1,7 @@
 import React from 'react'
 import Image from 'next/image'
 import './header.css'
-import { UserIcon, HomeIcon, BriefcaseIcon, NewspaperIcon, PhoneIcon, FingerPrintIcon, BellAlertIcon, MagnifyingGlassIcon} from '@heroicons/react/24/outline'
+import { UserIcon, HomeIcon, BriefcaseIcon, NewspaperIcon, PhoneIcon, FingerPrintIcon, BellAlertIcon} from '@heroicons/react/24/outline'
 
 export default function Header() {
   return (
@@ -14,12 +14,12 @@ export default function Header() {
             <div className="header__logo">
               <Image src="/images/Logo.svg" alt="Site Logo" width={77} height={0} />
             </div>
-            <form action="" className='bg-[#F3F3F6] pr-3 pl-6 w-[369px] h-14 rounded-full flex items-center justify-between hover:bg-white border-2 border-white hover:border-[var(--primaryColor)]/10'>
+            {/* <form action="" className='bg-[#F3F3F6] pr-3 pl-6 w-[369px] h-14 rounded-full flex items-center justify-between hover:bg-white border-2 border-white hover:border-[var(--primaryColor)]/10'>
               <input type="text" placeholder='What are you looking for?' className='placeholder:text-sm placeholder:text-black/80'/>
               <button type='submit' className='bg-[var(--primaryColor)] rounded-full p-2.5 text-white flex-row-center'>
                 <MagnifyingGlassIcon strokeWidth={2} className='w-5 h-5'/>
               </button>
-            </form>
+            </form> */}
             {/* Navigation menu */}
             <ul className="header__menu p-3 rounded-full flex items-center gap-x-4">
               <li className="header__menu-item">
