@@ -6,7 +6,7 @@ import { UserIcon, HomeIcon, BriefcaseIcon, NewspaperIcon, PhoneIcon, FingerPrin
 export default function Header() {
   return (
     // Main header block
-    <header className="header h-24 flex-row-center">
+    <header className="header h-24 flex-row-center shadow-sm">
       {/* Navigation bar */}
       <nav className="header__nav container flex items-center justify-between">
         <div className='flex-row-center gap-x-3'>

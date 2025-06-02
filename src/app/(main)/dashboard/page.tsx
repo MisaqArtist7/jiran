@@ -1,0 +1,50 @@
+import React from 'react'
+import Image from 'next/image'
+import LocationIcon from '@/components/icons/LocationIcon'
+import LinkedinIcon from '@/components/icons/LinkedinIcon'
+import WhatsappIcon from '@/components/icons/WhatsappIcon'
+import InstagramIcon from '@/components/icons/InstagramIcon'
+
+export default function Dashboard() {
+  return (
+    <main className='container mt-11'>
+      {/* User info section */}
+      <section className='flex flex-col md:flex-row justify-between items-start md:items-center gap-6'>
+
+        <div className='flex flex-col justify-center'>
+          {/* Profile Info */}
+          <div className="flex items-center gap-4">
+            <div className="relative w-28 h-28">
+              <Image src="/images/user.jpg" alt="User" fill className="rounded-full object-cover" />
+            </div>
+            <div>
+              <h4 className="text-xl font-semibold">XXXtentacion</h4>
+              <span className="text-sm text-gray-900">tentaxxx@gmail.com</span>
+            </div>
+          </div>
+          
+          {/* Bio and Quote */}
+          <div>
+            <h5 className="flex items-center font-medium gap-1 pt-2">
+              <LocationIcon />
+              New York, USA
+            </h5>
+            <p className="text-sm mt-1 text-gray-600 italic">&quot;You can&apos;t kill someone who has already died.&quot;</p>
+          </div>
+          {/* user's social media */}
+          <div className='flex items-center gap-x-2 pt-1'>
+            <WhatsappIcon />
+            <InstagramIcon />
+            <LinkedinIcon />
+          </div>
+        </div>
+      </section>
+      {/* posts */}
+      <section>
+        <div>top</div>
+        
+        <div>bottom</div>
+      </section>
+    </main>
+  )
+}
