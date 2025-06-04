@@ -1,4 +1,4 @@
-import React from 'react'
+import React from 'react' 
 export default function notfound() {
   return (
   <div className="NotFound relative flex-col-center gap-y-3 min-h-screen">
