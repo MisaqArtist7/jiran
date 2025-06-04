@@ -1,4 +1,4 @@
-'use client' // Enables client-side rendering in Next.js 13+
+'use client' // Enable client-side rendering in Next.js 13+
 
 import React, { useState, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
@@ -11,6 +11,7 @@ import './register.css'
 
 export default function SignUP() {
 
+  // Define Zod schema for form validation
   const signUpSchema = z.object({
     FullName: z.string().min(8, 'Nickname must be at least 8 characters'),
     email: z.string().email('Invalid email address'),
@@ -19,13 +20,16 @@ export default function SignUP() {
     agreeTerm: z.boolean().refine(val => val === true, {
       message: "You must agree to terms",
     }),
-  }).refine((data) => data.password === data.confirmPassword, {
+  })
+  .refine((data) => data.password === data.confirmPassword, {
     path: ['confirmPassword'],
     message: "Passwords doesn't match",
   });
 
+  // Infer TypeScript type from Zod schema
   type signUpFormInputs = z.infer<typeof signUpSchema>;
 
+  // Initialize react-hook-form with Zod resolver for validation
   const {
     register,
     handleSubmit,
@@ -35,37 +39,52 @@ export default function SignUP() {
     resolver: zodResolver(signUpSchema)
   });
 
+  // Watch the agreeTerm checkbox to enable/disable submit button
   const isAgreeTermeChecked = watch('agreeTerm');
 
+  // Local state to toggle password visibility
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   
+  // State for storing user's geolocation coordinates or null if not available
   const [location, setLocation] = useState<{ lat: number; lng: number } | null>(null);
+  // State for any error messages related to geolocation
   const [locationError, setLocationError] = useState<string | null>(null);
 
+  // useEffect to request user's current location once on component mount
   useEffect(() => {
+    // Check if geolocation API is supported by the browser
     if (!navigator.geolocation) {
-      setLocationError('مرورگر شما از موقعیت مکانی پشتیبانی نمی‌کند.');
+      setLocationError('Your browser does not support geolocation.');
       return;
     }
     
+    // Get current position asynchronously
     navigator.geolocation.getCurrentPosition(
       (pos) => {
+        // On success, update location state with latitude and longitude
         setLocation({ lat: pos.coords.latitude, lng: pos.coords.longitude });
+        // Clear any previous error
         setLocationError(null);
       },
-      () => setLocationError('دسترسی به موقعیت مکانی رد شد.')
+      () => {
+        // On error or if user denies permission, set error message
+        setLocationError('Access to location was denied.');
+      }
     );
   }, []);
 
+  // Handle form submission
   const onSubmit = (data: signUpFormInputs) => {
+    // Check if location data is available before submitting
     if (!location) {
-      alert('لطفا اجازه دسترسی به موقعیت مکانی را بدهید.');
+      alert('Please allow access to your location.');
       return;
     }
+    // Combine form data with location info
     const dataToSend = { ...data, location };
     console.log('Data to send:', dataToSend);
-    // TODO: ارسال داده به سرور اینجا انجام شود
+    // TODO: send data to server here
   }
 
   return (
@@ -76,9 +95,10 @@ export default function SignUP() {
       >
         <h2 className="text-2xl font-bold mb-6 text-center">Sign up to your account</h2>
 
-        {/* Location error message */}
+        {/* Show location error message if any */}
         {locationError && <p className="text-red-600 mb-4 text-center">{locationError}</p>}
 
+        {/* Full Name input field */}
         <label htmlFor="FullName" className="block mb-1 font-medium">Full Name</label>
         <div className={`${errors.FullName ? "border-red-500" : "border-gray-300"} flex-row-center w-full p-2 rounded border shadow-sm`}>
           <UserIcon className="h-7 w-7" />
@@ -90,10 +110,12 @@ export default function SignUP() {
             className="w-full pl-2"
           />
         </div>
+        {/* Display validation error for FullName */}
         {errors.FullName && (
           <p className="text-red-600 text-sm mt-1">{errors.FullName.message}</p>
         )}
 
+        {/* Email input field */}
         <label htmlFor="email" className="block mt-4 mb-1 font-medium">Email</label>
         <div className={`${errors.email ? "border-red-500" : "border-gray-300"} flex-row-center w-full p-2 rounded border shadow-sm`}>
           <EnvelopeIcon className="h-7 w-7" />
@@ -105,10 +127,12 @@ export default function SignUP() {
             className="w-full pl-2"
           />
         </div>
+        {/* Display validation error for Email */}
         {errors.email && (
           <p className="text-red-600 text-sm mt-1">{errors.email.message}</p>
         )}
 
+        {/* Password input field with toggle visibility */}
         <label htmlFor="password" className="block mt-4 mb-1 font-medium">Password</label>
         <div className={`${errors.password ? "border-red-500" : "border-gray-300"} relative rounded border shadow-sm`}>
           <div className='flex-row-center w-full p-2'>
@@ -121,6 +145,7 @@ export default function SignUP() {
               className="w-full pl-2"
             />
           </div>
+          {/* Button to toggle password visibility */}
           <button
             onClick={(e) => { e.preventDefault(); setShowPassword(prev => !prev); }}
             type="button"
@@ -134,10 +159,12 @@ export default function SignUP() {
             />
           </button>
         </div>
+        {/* Display validation error for Password */}
         {errors.password && (
           <p className="text-red-600 text-sm mt-1">{errors.password.message}</p>
         )}
 
+        {/* Confirm Password input field with toggle visibility */}
         <label htmlFor="confirmPassword" className="block mt-4 mb-1 font-medium">Re-Password</label>
         <div className={`relative rounded border shadow-sm ${errors.confirmPassword ? "border-red-500" : "border-gray-300"}`}>
           <div className='flex-row-center w-full p-2'>
@@ -150,6 +177,7 @@ export default function SignUP() {
               className="w-full pl-2"
             />
           </div>
+          {/* Button to toggle confirm password visibility */}
           <button
             onClick={(e) => { e.preventDefault(); setShowConfirmPassword(prev => !prev); }}
             type="button"
@@ -163,10 +191,12 @@ export default function SignUP() {
             />
           </button>
         </div>
+        {/* Display validation error for Confirm Password */}
         {errors.confirmPassword && (
           <p className="text-red-600 text-sm mt-1">{errors.confirmPassword.message}</p>
         )}
 
+        {/* Checkbox for agreeing to terms of service */}
         <div className="flex items-center justify-between mt-4">
           <label className="flex items-center gap-1">
             <input
@@ -180,6 +210,7 @@ export default function SignUP() {
           </label>
         </div>
 
+        {/* Submit button, disabled if terms not agreed or location missing or has error */}
         <button
           type="submit"
           disabled={!isAgreeTermeChecked || !location || !!locationError}
@@ -191,6 +222,7 @@ export default function SignUP() {
           Sign Up
         </button>
 
+        {/* Link to sign in page */}
         <p className="text-center mt-4 text-sm">
           Already have an account?{" "}
           <Link href="/login" className="text-[var(--primaryColor)] hover:underline">
