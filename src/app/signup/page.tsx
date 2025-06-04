@@ -13,7 +13,7 @@ export default function SignUP() {
 
   // Define Zod schema for form validation
   const signUpSchema = z.object({
-    FullName: z.string().min(8, 'Nickname must be at least 8 characters'),
+    name: z.string().min(8, 'Nickname must be at least 8 characters'),
     email: z.string().email('Invalid email address'),
     password: z.string().min(8, 'Password must be at least 8 characters'),
     confirmPassword: z.string(),
@@ -47,7 +47,7 @@ export default function SignUP() {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   
   // State for storing user's geolocation coordinates or null if not available
-  const [location, setLocation] = useState<{ lat: number; lng: number } | null>(null);
+  const [location, setLocation] = useState<{ loc_lat: number; loc_lng: number } | null>(null);
   // State for any error messages related to geolocation
   const [locationError, setLocationError] = useState<string | null>(null);
 
@@ -63,7 +63,7 @@ export default function SignUP() {
     navigator.geolocation.getCurrentPosition(
       (pos) => {
         // On success, update location state with latitude and longitude
-        setLocation({ lat: pos.coords.latitude, lng: pos.coords.longitude });
+        setLocation({ loc_lat: pos.coords.latitude, loc_lng: pos.coords.longitude });
         // Clear any previous error
         setLocationError(null);
       },
@@ -82,7 +82,7 @@ export default function SignUP() {
       return;
     }
     // Combine form data with location info
-    const dataToSend = { ...data, location };
+    const dataToSend = { ...data, latitude: location.loc_lat, longitude: location.loc_lng };
     console.log('Data to send:', dataToSend);
     // TODO: send data to server here
   }
@@ -100,10 +100,10 @@ export default function SignUP() {
 
         {/* Full Name input field */}
         <label htmlFor="FullName" className="block mb-1 font-medium">Full Name</label>
-        <div className={`${errors.FullName ? "border-red-500" : "border-gray-300"} flex-row-center w-full p-2 rounded border shadow-sm`}>
+        <div className={`${errors.name ? "border-red-500" : "border-gray-300"} flex-row-center w-full p-2 rounded border shadow-sm`}>
           <UserIcon className="h-7 w-7" />
           <input
-            {...register('FullName')}
+            {...register('name')}
             id="FullName"
             type="text"
             placeholder="Enter your Nickname"
@@ -111,8 +111,8 @@ export default function SignUP() {
           />
         </div>
         {/* Display validation error for FullName */}
-        {errors.FullName && (
-          <p className="text-red-600 text-sm mt-1">{errors.FullName.message}</p>
+        {errors.name && (
+          <p className="text-red-600 text-sm mt-1">{errors.name.message}</p>
         )}
 
         {/* Email input field */}
