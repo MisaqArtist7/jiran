@@ -17,13 +17,13 @@ export default function SignUP() {
     email: z.string().email('Invalid email address'),
     password: z.string().min(8, 'Password must be at least 8 characters'),
     password_confirmation: z.string(),
-    // agreeTerm: z.boolean().refine(val => val === true, {
-    //   message: "You must agree to terms",
-    // }),
+    agreeTerm: z.boolean().refine(val => val === true, {
+      message: "You must agree to terms",
+    }),
   })
 
   .refine((data) => data.password === data.password_confirmation, {
-    path: ['confirmPassword'],
+    path: ['password_confirmation'],
     message: "Passwords doesn't match",
   });
 
@@ -31,17 +31,10 @@ export default function SignUP() {
   type signUpFormInputs = z.infer<typeof signUpSchema>;
 
   // Initialize react-hook-form with Zod resolver for validation
-  const {
-    register,
-    handleSubmit,
-    // watch,
-    formState: { errors }
-  } = useForm<signUpFormInputs>({
-    resolver: zodResolver(signUpSchema)
-  });
+  const { register, handleSubmit, watch, formState: { errors } } = useForm<signUpFormInputs>({ resolver: zodResolver(signUpSchema) });
 
   // Watch the agreeTerm checkbox to enable/disable submit button
-  // const isAgreeTermeChecked = watch('agreeTerm');
+  const isAgreeTermeChecked = watch('agreeTerm');
 
   // Local state to toggle password visibility
   const [showPassword, setShowPassword] = useState(false)
@@ -59,7 +52,7 @@ export default function SignUP() {
       setLocationError('Your browser does not support geolocation.');
       return;
     }
-    
+
     // Get current position asynchronously
     navigator.geolocation.getCurrentPosition(
       (pos) => {
@@ -86,10 +79,7 @@ export default function SignUP() {
     const dataToSend = { ...data, latitude: location.loc_lat, longitude: location.loc_lng };
     console.log('Data to send:', dataToSend);
     
-    axios.post(
-      'http://56.228.2.146:8080/api/register',
-      dataToSend,
-      {
+    axios.post( 'http://56.228.2.146:8080/api/register', dataToSend, {
         headers: {
           'Content-Type': 'application/json',
         },
@@ -106,7 +96,6 @@ export default function SignUP() {
         console.error('❌ Other Error:', error);
       }
     });
-
   }
 
   return (
@@ -219,7 +208,7 @@ export default function SignUP() {
         )}
 
         {/* Checkbox for agreeing to terms of service */}
-        {/* <div className="flex items-center justify-between mt-4">
+        <div className="flex items-center justify-between mt-4">
           <label className="flex items-center gap-1">
             <input
               {...register("agreeTerm")}
@@ -230,10 +219,10 @@ export default function SignUP() {
               I agree to the <span className='text-[var(--primaryColor)]'>Terms Of Services</span>
             </span>
           </label>
-        </div> */}
+        </div>
 
         {/* Submit button, disabled if terms not agreed or location missing or has error */}
-        {/* <button
+        <button
           type="submit"
           disabled={!isAgreeTermeChecked || !location || !!locationError}
           className={`w-full mt-6 text-white py-2 rounded-md transition
@@ -242,7 +231,7 @@ export default function SignUP() {
               : 'bg-[var(--primaryColor)] hover:bg-blue-700 pointer-events-auto opacity-100'}`}
         >
           Sign Up
-        </button> */}
+        </button>
 
         {/* Link to sign in page */}
         <p className="text-center mt-4 text-sm">
