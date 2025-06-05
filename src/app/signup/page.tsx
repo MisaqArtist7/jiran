@@ -11,7 +11,6 @@ import Image from 'next/image'
 import './register.css'
 
 export default function SignUP() {
-
   // Define Zod schema for form validation
   const signUpSchema = z.object({
     name: z.string().min(8, 'Nickname must be at least 8 characters'),
@@ -22,8 +21,9 @@ export default function SignUP() {
       message: "You must agree to terms",
     }),
   })
+
   .refine((data) => data.password === data.password_confirmation, {
-    path: ['confirmPassword'],
+    path: ['password_confirmation'],
     message: "Passwords doesn't match",
   });
 
@@ -31,14 +31,7 @@ export default function SignUP() {
   type signUpFormInputs = z.infer<typeof signUpSchema>;
 
   // Initialize react-hook-form with Zod resolver for validation
-  const {
-    register,
-    handleSubmit,
-    watch,
-    formState: { errors }
-  } = useForm<signUpFormInputs>({
-    resolver: zodResolver(signUpSchema)
-  });
+  const { register, handleSubmit, watch, formState: { errors } } = useForm<signUpFormInputs>({ resolver: zodResolver(signUpSchema) });
 
   // Watch the agreeTerm checkbox to enable/disable submit button
   const isAgreeTermeChecked = watch('agreeTerm');
@@ -59,7 +52,7 @@ export default function SignUP() {
       setLocationError('Your browser does not support geolocation.');
       return;
     }
-    
+
     // Get current position asynchronously
     navigator.geolocation.getCurrentPosition(
       (pos) => {
@@ -86,15 +79,22 @@ export default function SignUP() {
     const dataToSend = { ...data, latitude: location.loc_lat, longitude: location.loc_lng };
     console.log('Data to send:', dataToSend);
     
-    axios.post('http://56.228.2.146:8080/api/register', dataToSend)
+    axios.post( 'http://56.228.2.146:8080/api/register', dataToSend, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }
+    )
     .then((response) => {
-      console.log('Success:', response.data);
+      console.log('✅ Success:', response.data);
     })
-
     .catch((error) => {
       if (error.response && error.response.status === 422) {
-        const validationErrors = error.response.data.errors; console.log(validationErrors); 
-      } else { console.error(error) };
+        const validationErrors = error.response.data.errors;
+        console.log('❌ Validation Errors:', validationErrors);
+      } else {
+        console.error('❌ Other Error:', error);
+      }
     });
   }
 
