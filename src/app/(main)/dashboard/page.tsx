@@ -10,6 +10,7 @@ import BusinessOutlineIcon from '@/components/icons/BusinessOutlineIcon'
 import NeedsOutlineIcon from '@/components/icons/NeedsOutlineIcon'
 import JobOutlineIcon from '@/components/icons/JobOutlineIcon'
 import CommunityOutlineIcon from '@/components/icons/CommunityOutlineIcon'
+import Link from 'next/link'
 
 export default function Dashboard() {
   return (
@@ -44,9 +45,17 @@ export default function Dashboard() {
             <LinkedinIcon />
           </div>
         </div>
+
+        <div className='flex-row-center gap-2 '>
+          <Link href="/dashboard-edit" className='flex-row-center w-36 h-9 rounded-[5px] hover:bg-[var(--primaryColor)] hover:border-[var(--PrimaryColor)] hover:text-white border text-[var(--navy)] border-gray-300'> Edit profile </Link>
+          <Link href="/dashboard-edit" className='flex-row-center w-36 h-9 rounded-[5px] hover:bg-[var(--primaryColor)] hover:border-[var(--PrimaryColor)] hover:text-white border text-[var(--navy)] border-gray-300'> Share profile </Link>
+        </div>
+
       </section>
+
       {/* posts */}
       <section className='my-11'>
+
         <h3>Posts</h3>
         <div className='flex-row-center gap-x-36 mt-4 mb-7'>
           <AllOutlineIcon />
@@ -59,6 +68,7 @@ export default function Dashboard() {
         <div className='grid grid-cols-4 gap-x-11'>
           <DashboardPost />
         </div>
+        
       </section>
     </main>
   )
