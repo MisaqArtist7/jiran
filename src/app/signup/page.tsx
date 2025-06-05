@@ -5,6 +5,7 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from "zod"
 import Link from 'next/link'
+import axios from 'axios'
 import { EnvelopeIcon, UserIcon, KeyIcon } from '@heroicons/react/24/outline'
 import Image from 'next/image'
 import './register.css'
@@ -16,12 +17,12 @@ export default function SignUP() {
     name: z.string().min(8, 'Nickname must be at least 8 characters'),
     email: z.string().email('Invalid email address'),
     password: z.string().min(8, 'Password must be at least 8 characters'),
-    confirmPassword: z.string(),
+    password_confirmation: z.string(),
     agreeTerm: z.boolean().refine(val => val === true, {
       message: "You must agree to terms",
     }),
   })
-  .refine((data) => data.password === data.confirmPassword, {
+  .refine((data) => data.password === data.password_confirmation, {
     path: ['confirmPassword'],
     message: "Passwords doesn't match",
   });
@@ -84,13 +85,23 @@ export default function SignUP() {
     // Combine form data with location info
     const dataToSend = { ...data, latitude: location.loc_lat, longitude: location.loc_lng };
     console.log('Data to send:', dataToSend);
-    // TODO: send data to server here
+    
+    axios.post('http://56.228.2.146:8080/api/register', dataToSend)
+    .then((response) => {
+      console.log('Success:', response.data);
+    })
+
+    .catch((error) => {
+      if (error.response && error.response.status === 422) {
+        const validationErrors = error.response.data.errors; console.log(validationErrors); 
+      } else { console.error(error) };
+    });
   }
 
   return (
     <main className="flex flex-col items-center justify-center min-h-screen p-4">
 
-      <form onSubmit={handleSubmit(onSubmit)}
+      <form onSubmit={handleSubmit(onSubmit)} method='post'
         className="bg-white p-8 rounded-md shadow-md w-full max-w-sm"
       >
         <h2 className="text-2xl font-bold mb-6 text-center">Sign up to your account</h2>
@@ -166,11 +177,11 @@ export default function SignUP() {
 
         {/* Confirm Password input field with toggle visibility */}
         <label htmlFor="confirmPassword" className="block mt-4 mb-1 font-medium">Re-Password</label>
-        <div className={`relative rounded border shadow-sm ${errors.confirmPassword ? "border-red-500" : "border-gray-300"}`}>
+        <div className={`relative rounded border shadow-sm ${errors.password_confirmation ? "border-red-500" : "border-gray-300"}`}>
           <div className='flex-row-center w-full p-2'>
             <KeyIcon className="h-7 w-7" />
             <input
-              {...register('confirmPassword')}
+              {...register('password_confirmation')}
               type={showConfirmPassword ? 'text' : 'password'}
               id="confirmPassword"
               placeholder="Re-enter your password"
@@ -192,8 +203,8 @@ export default function SignUP() {
           </button>
         </div>
         {/* Display validation error for Confirm Password */}
-        {errors.confirmPassword && (
-          <p className="text-red-600 text-sm mt-1">{errors.confirmPassword.message}</p>
+        {errors.password_confirmation && (
+          <p className="text-red-600 text-sm mt-1">{errors.password_confirmation.message}</p>
         )}
 
         {/* Checkbox for agreeing to terms of service */}
