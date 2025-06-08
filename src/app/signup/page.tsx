@@ -12,29 +12,36 @@ import './register.css'
 
 export default function SignUP() {
   // Define Zod schema for form validation
-  const signUpSchema = z.object({
-    name: z.string().min(8, 'Nickname must be at least 8 characters'),
-    email: z.string().email('Invalid email address'),
-    password: z.string().min(8, 'Password must be at least 8 characters'),
-    password_confirmation: z.string(),
-    agreeTerm: z.boolean().refine(val => val === true, {
-      message: "You must agree to terms",
-    }),
-  })
 
+const signUpSchema = z
+  .object({
+    name: z.string().min(8, 'Name must be at least 8 characters'),
+    email: z.string().email('Invalid email address'),
+    password: z
+      .string()
+      .min(8, 'Password must be at least 8 characters')
+      .regex(/[A-Z]/, 'Password must include at least one uppercase letter')
+      .regex(/[0-9]/, 'Password must include at least one number')
+      .regex(/[^A-Za-z0-9]/, 'Password must include at least one symbol (e.g. @, #, !)'),
+    password_confirmation: z.string(),
+    // agreeTerm: z.boolean().refine(val => val === true, {
+    //   message: "You must agree to the terms",
+    // }),
+  })
   .refine((data) => data.password === data.password_confirmation, {
+    message: "Passwords don't match",
     path: ['password_confirmation'],
-    message: "Passwords doesn't match",
   });
+
 
   // Infer TypeScript type from Zod schema
   type signUpFormInputs = z.infer<typeof signUpSchema>;
 
   // Initialize react-hook-form with Zod resolver for validation
-  const { register, handleSubmit, watch, formState: { errors } } = useForm<signUpFormInputs>({ resolver: zodResolver(signUpSchema) });
+  const { register, handleSubmit, formState: { errors } } = useForm<signUpFormInputs>({ resolver: zodResolver(signUpSchema) });
 
   // Watch the agreeTerm checkbox to enable/disable submit button
-  const isAgreeTermeChecked = watch('agreeTerm');
+  // const isAgreeTermeChecked = watch('agreeTerm');
 
   // Local state to toggle password visibility
   const [showPassword, setShowPassword] = useState(false)
@@ -76,10 +83,10 @@ export default function SignUP() {
       return;
     }
     // Combine form data with location info
-    const dataToSend = { ...data, latitude: location.loc_lat, longitude: location.loc_lng };
+    const dataToSend = { ...data, loc_lat: location.loc_lat, loc_lng: location.loc_lng };
     console.log('Data to send:', dataToSend);
     
-    axios.post( 'http://56.228.2.146:8080/api/register', dataToSend, {
+    axios.post( 'http://56.228.2.146:8080/api/v1/auth/register', dataToSend, {
         headers: {
           'Content-Type': 'application/json',
         },
@@ -90,8 +97,7 @@ export default function SignUP() {
     })
     .catch((error) => {
       if (error.response && error.response.status === 422) {
-        const validationErrors = error.response.data.errors;
-        console.log('❌ Validation Errors:', validationErrors);
+        console.log('❌ Validation Error Payload:', error.response.data);
       } else {
         console.error('❌ Other Error:', error);
       }
@@ -211,7 +217,7 @@ export default function SignUP() {
         <div className="flex items-center justify-between mt-4">
           <label className="flex items-center gap-1">
             <input
-              {...register("agreeTerm")}
+              // {...register("agreeTerm")}
               type="checkbox"
               className="w-3.5 h-3.5"
             />
@@ -222,13 +228,20 @@ export default function SignUP() {
         </div>
 
         {/* Submit button, disabled if terms not agreed or location missing or has error */}
-        <button
+        {/* <button
           type="submit"
           disabled={!isAgreeTermeChecked || !location || !!locationError}
           className={`w-full mt-6 text-white py-2 rounded-md transition
             ${(!isAgreeTermeChecked || !location || !!locationError)
               ? 'bg-gray-400 pointer-events-none opacity-60'
               : 'bg-[var(--primaryColor)] hover:bg-blue-700 pointer-events-auto opacity-100'}`}
+        >
+          Sign Up
+        </button> */}
+
+        <button
+          type="submit"
+          className={`w-full mt-6 text-white py-2 rounded-md transition bg-[var(--primaryColor)]`}
         >
           Sign Up
         </button>
