@@ -38,7 +38,7 @@ const signUpSchema = z
   type signUpFormInputs = z.infer<typeof signUpSchema>;
 
   // Initialize react-hook-form with Zod resolver for validation
-  const { register, handleSubmit, setError, formState: { errors } } = useForm<signUpFormInputs>({ resolver: zodResolver(signUpSchema) });
+  const { register, handleSubmit, formState: { errors } } = useForm<signUpFormInputs>({ resolver: zodResolver(signUpSchema) });
 
   // Watch the agreeTerm checkbox to enable/disable submit button
   // const isAgreeTermeChecked = watch('agreeTerm');
