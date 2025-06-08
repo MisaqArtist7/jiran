@@ -34,12 +34,11 @@ const signUpSchema = z
     path: ['password_confirmation'],
   });
 
-
   // Infer TypeScript type from Zod schema
   type signUpFormInputs = z.infer<typeof signUpSchema>;
 
   // Initialize react-hook-form with Zod resolver for validation
-  const { register, handleSubmit, formState: { errors } } = useForm<signUpFormInputs>({ resolver: zodResolver(signUpSchema) });
+  const { register, handleSubmit, setError, formState: { errors } } = useForm<signUpFormInputs>({ resolver: zodResolver(signUpSchema) });
 
   // Watch the agreeTerm checkbox to enable/disable submit button
   // const isAgreeTermeChecked = watch('agreeTerm');
@@ -101,6 +100,10 @@ const signUpSchema = z
     .catch((error) => {
       if (error.response && error.response.status === 422) {
         console.log('❌ Validation Error Payload:', error.response.data);
+        setError("email", {
+          type: "server",
+          message: error.response.data.errors.email,
+        });
       } else {
         console.error('❌ Other Error:', error);
       }
