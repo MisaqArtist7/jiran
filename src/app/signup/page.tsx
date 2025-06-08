@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
+import { useRouter } from 'next/navigation';
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from "zod"
 import Link from 'next/link'
@@ -75,6 +76,7 @@ const signUpSchema = z
     );
   }, []);
 
+  const router = useRouter();
   // Handle form submission
   const onSubmit = (data: signUpFormInputs) => {
     // Check if location data is available before submitting
@@ -87,13 +89,14 @@ const signUpSchema = z
     console.log('Data to send:', dataToSend);
     
     axios.post( 'http://56.228.2.146:8080/api/v1/auth/register', dataToSend, {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      }
-    )
-    .then((response) => {
-      console.log('✅ Success:', response.data);
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    }
+  )
+  .then((response) => {
+    console.log('✅ Success:', response.data);
+    router.push('/login'); // go to login page
     })
     .catch((error) => {
       if (error.response && error.response.status === 422) {

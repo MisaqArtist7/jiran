@@ -5,14 +5,16 @@ import React, { useState } from "react"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from "zod"
+import { useRouter } from "next/navigation"
 import { EnvelopeIcon } from '@heroicons/react/24/outline'
 import Image from "next/image"
 import './login.css'
+import axios from "axios"
 
 // ------------------ Zod Schema for Validation ------------------
 const loginSchema = z.object({
   email: z.string().email("Invalid email address"),
-  password: z.string().min(8, "Password must be at least 8 characters"),
+  password: z.string().min(8, "Password or Email is not correct"),
   rememberMe: z.boolean().optional(),
 })
 
@@ -25,6 +27,7 @@ export default function LoginPage() {
   const {
     register,
     handleSubmit,
+    setError,
     formState: { errors }
   } = useForm<LoginFormInputs>({
     resolver: zodResolver(loginSchema),
@@ -33,10 +36,35 @@ export default function LoginPage() {
   // Toggle password visibility
   const [showPassword, setShowPassword] = useState<boolean>(false)
 
+  const router = useRouter()
   // Handle form submission
   const onSubmit = (data: LoginFormInputs) => {
     console.log("Form data:", data)
-    // TODO: Implement actual login logic here (e.g., send data to API)
+
+    axios.post('http://56.228.2.146:8080/api/v1/auth/login', data, {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+    .then((response) => {
+      console.log('✅ Login Success:', response.data);
+      router.push('/dashboard')
+    })
+    .catch((error) => {
+      if (error.response && error.response.status === 401) {
+        console.error('❌ Invalid credentials');
+        setError("email", {
+          type: "server",
+          message: "Email or password is incorrect",
+        });
+        setError("password", {
+          type: "server",
+          message: "Email or password is incorrect",
+        });
+      } else {
+        console.error('❌ Other login error:', error);
+      }
+    });
   }
 
   return (
