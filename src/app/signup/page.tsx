@@ -34,7 +34,6 @@ const signUpSchema = z
     path: ['password_confirmation'],
   });
 
-
   // Infer TypeScript type from Zod schema
   type signUpFormInputs = z.infer<typeof signUpSchema>;
 
@@ -101,10 +100,6 @@ const signUpSchema = z
     .catch((error) => {
       if (error.response && error.response.status === 422) {
         console.log('❌ Validation Error Payload:', error.response.data);
-        setError("email", {
-          type: "server",
-          message: "Email or password is incorrect",
-        });
       } else {
         console.error('❌ Other Error:', error);
       }
