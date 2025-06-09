@@ -2,6 +2,7 @@ import { MagnifyingGlassIcon } from '@heroicons/react/24/outline'
 import Image from 'next/image'
 export default function HomePage() {
   return (
+    <>
     <main className="container">
       <section className="hero text-[var(--navy)] flex-col-center gap-7 my-7 py-7">
         <div className="flex-col-center font-semibold">
@@ -33,7 +34,27 @@ export default function HomePage() {
         ))}
       </section>
 
-      
+      <section className='grid grid-cols-3 place-items-center my-11'>
+        {[
+          {id:1, src: "/images/CommunityBox.svg"},
+          {id:2, src: "/images/LocalServicesVector.svg"},
+          {id:3, src: "/images/OpportunityBox.svg"}
+        ].map(({ id, src }) => (
+          <div key={id}>
+            <Image src={src} alt="" width={218} height={218}/>
+          </div>
+        ))}  
+      </section>
+
     </main>
+      <footer className='bg-[#E6E6E6] py-3'>
+        <div className='container flex items-center gap-4 *:hover:text-[var(--primaryColor)]'>
+          <a href="#">About Us</a>
+          <a href="#">Support</a>
+          <a href="#">Terms & Privacy</a>
+          <a href="#">Follow Us</a>
+        </div>
+      </footer>
+    </>
   )
 }
