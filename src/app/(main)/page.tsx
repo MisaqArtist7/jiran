@@ -45,16 +45,7 @@ export default function HomePage() {
           </div>
         ))}  
       </section>
-
     </main>
-      <footer className='bg-[#E6E6E6] py-3'>
-        <div className='container flex items-center gap-4 *:hover:text-[var(--primaryColor)]'>
-          <a href="#">About Us</a>
-          <a href="#">Support</a>
-          <a href="#">Terms & Privacy</a>
-          <a href="#">Follow Us</a>
-        </div>
-      </footer>
     </>
   )
 }
