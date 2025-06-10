@@ -2,7 +2,7 @@ import React from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import './header.css'
-import { UserIcon, HomeIcon, BriefcaseIcon, NewspaperIcon, PhoneIcon, FingerPrintIcon, BellAlertIcon} from '@heroicons/react/24/outline'
+import { HomeIcon, BriefcaseIcon, NewspaperIcon, FingerPrintIcon} from '@heroicons/react/24/outline'
 
 export default function Header() {
   return (
