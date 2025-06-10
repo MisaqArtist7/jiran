@@ -11,13 +11,13 @@ export default function HomePage() {
         </div>
         <a href="#" className="bg-[var(--primaryColor)] hover:bg-blue-600 text-white px-7 py-2 rounded">Join Your Local Network</a>
         <form action="">
-          <div className='flex items-center justify-between rounded shadow bg-white py-2 pr-2 pl-4 w-3xl'>
+          <div className='flex items-center justify-between rounded shadow bg-white py-2 pr-2 pl-4 md:w-2xl lg:w-3xl'>
             <input type="text" className="placeholder:text-[var(--navy)] text-black" placeholder="Search..."/>
             <MagnifyingGlassIcon strokeWidth={2} className='w-5 h-5' />
           </div>
         </form>
       </section>
-      <section className="grid grid-cols-4 gap-4 place-items-center my-11">
+      <section className="grid  sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 place-items-center my-11">
         {[
           { src: "/images/BusinessesVector.svg", alt: "BusinessesVector", label: "Businesses" },
           { src: "/images/JobsVector.svg", alt: "JobsVector", label: "Jobs" },
@@ -34,7 +34,7 @@ export default function HomePage() {
         ))}
       </section>
 
-      <section className='grid grid-cols-3 place-items-center my-11'>
+      <section className='grid sm:grid-cols-2 md:grid-cols-3 gap-3 place-items-center my-11'>
         {[
           {id:1, src: "/images/CommunityBox.svg"},
           {id:2, src: "/images/LocalServicesVector.svg"},
