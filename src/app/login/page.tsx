@@ -41,7 +41,7 @@ export default function LoginPage() {
   const onSubmit = (data: LoginFormInputs) => {
     console.log("Form data:", data)
 
-    axios.post('http://56.228.2.146:8080/api/v1/auth/login', data, {
+    axios.post('https://jiran-api.com/api/v1/auth/login', data, {
       headers: {
         'Content-Type': 'application/json',
       },
