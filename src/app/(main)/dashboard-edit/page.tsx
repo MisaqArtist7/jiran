@@ -1,8 +1,35 @@
+"use client"
 import React from 'react'
 import { ExclamationCircleIcon, PlusIcon, MapPinIcon, MapIcon } from '@heroicons/react/24/outline'
 import Image from 'next/image'
+import axios from 'axios'
+import { useEffect } from 'react'
 
 export default function DashboardEdit() {
+
+useEffect(() => {
+    axios.post(
+      'https://jiran-api.com/api/v1/auth/edit-profile', {}, 
+      {
+        headers: 
+        {
+          'Content-Type': 'application/json',
+        },
+      }
+    )
+    .then((response) => {
+      console.log('✅ Success:', response.data);
+      console.log(response);
+      return response.data;
+    })
+    .then((data) => {
+      console.log(data);
+    })
+    .catch((error) => {
+      console.error(error);
+    });
+  }, []);
+
   return (
     <main className='container my-11'>
       <section className='flex items-start justify-between gap-3'>

@@ -87,7 +87,7 @@ const signUpSchema = z
     const dataToSend = { ...data, loc_lat: location.loc_lat, loc_lng: location.loc_lng };
     console.log('Data to send:', dataToSend);
     
-    axios.post( 'https://jiran-api.com/api/v1/auth/register', dataToSend, {
+    axios.post('https://jiran-api.com/api/v1/auth/register', dataToSend, {
       headers: {
         'Content-Type': 'application/json',
       },
