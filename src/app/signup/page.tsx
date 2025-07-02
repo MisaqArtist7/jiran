@@ -95,7 +95,7 @@ const signUpSchema = z
   )
   .then((response) => {
     console.log('✅ Success:', response.data);
-    router.push('/login'); // go to login page
+    router.push('/dashboard'); // go to dashboard page
     })
     .catch((error) => {
       if (error.response && error.response.status === 422) {
