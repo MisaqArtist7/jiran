@@ -61,6 +61,9 @@ export default function LoginPage() {
     .then((response) => {
       console.log('✅ Login Success:', response.data);
       router.push('/dashboard')
+      const token = response.data.data.token;
+      localStorage.setItem('token', token);
+      console.log('📦 Token saved to localStorage:', token);
     })
     .catch((error) => {
       if (error.response && error.response.status === 401) {
@@ -80,6 +83,7 @@ export default function LoginPage() {
     .finally(() => {
       setIsSubmitting(false);
     });
+
   }
 
   return (

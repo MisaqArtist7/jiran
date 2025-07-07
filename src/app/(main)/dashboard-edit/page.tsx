@@ -7,19 +7,26 @@ import { useEffect } from 'react'
 
 export default function DashboardEdit() {
 
-useEffect(() => {
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+
+    if (!token) {
+      console.log("⛔ No token found!");
+      return;
+    }
+
     axios.post(
-      'https://jiran-api.com/api/v1/auth/edit-profile', {}, 
+      'https://jiran-api.com/api/v1/auth/edit-profile',
+      {}, 
       {
-        headers: 
-        {
+        headers: {
           'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
         },
       }
     )
     .then((response) => {
       console.log('✅ Success:', response.data);
-      console.log(response);
       return response.data;
     })
     .then((data) => {
@@ -29,6 +36,8 @@ useEffect(() => {
       console.error(error);
     });
   }, []);
+
+  
 
   return (
     <main className='container my-11'>
