@@ -1,4 +1,5 @@
-import React from 'react'
+"use client"
+import React, { useEffect } from 'react'
 import Image from 'next/image'
 import LocationIcon from '@/components/icons/LocationIcon'
 import LinkedinIcon from '@/components/icons/LinkedinIcon'
@@ -10,10 +11,33 @@ import BusinessOutlineIcon from '@/components/icons/BusinessOutlineIcon'
 import NeedsOutlineIcon from '@/components/icons/NeedsOutlineIcon'
 import JobOutlineIcon from '@/components/icons/JobOutlineIcon'
 import CommunityOutlineIcon from '@/components/icons/CommunityOutlineIcon'
-
 import Link from 'next/link'
+import axios from 'axios'
 
-export default function Dashboard() {
+  export default function Dashboard() {
+    
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    console.log(token);
+    if (!token) {
+      console.log("⛔ No token found!");
+      return;
+    }
+
+    axios.get('https://jiran-api.com/api/v1/auth/show', {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      }
+    })
+    .then(response => {
+      console.log(response);
+    })
+    .catch(error => {
+      console.error('❌ Error:', error);
+    });
+  }, []);
+
   return (
     <main className='container'>
       {/* User info section */}
