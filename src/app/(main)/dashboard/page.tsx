@@ -1,5 +1,5 @@
 "use client"
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import Image from 'next/image'
 import LocationIcon from '@/components/icons/LocationIcon'
 import LinkedinIcon from '@/components/icons/LinkedinIcon'
@@ -15,7 +15,10 @@ import Link from 'next/link'
 import axios from 'axios'
 
   export default function Dashboard() {
-    
+  
+  const [username, setUsername] = useState('')
+  const [email, setEmail] = useState('')
+
   useEffect(() => {
     const token = localStorage.getItem('token');
     console.log(token);
@@ -32,6 +35,9 @@ import axios from 'axios'
     })
     .then(response => {
       console.log(response);
+      console.log(response.data.data)
+      setUsername(response.data.data.name)
+      setEmail(response.data.data.email)
     })
     .catch(error => {
       console.error('❌ Error:', error);
@@ -50,8 +56,8 @@ import axios from 'axios'
               <Image src="/images/user.jpg" alt="User" fill className="rounded-full object-cover" />
             </div>
             <div>
-              <h4 className="text-xl font-semibold">XXXtentacion</h4>
-              <span className="text-sm text-gray-900">tentaxxx@gmail.com</span>
+              <h4 className="text-xl font-semibold">{username}</h4>
+              <span className="text-sm text-gray-900">{email}</span>
             </div>
           </div>
           
