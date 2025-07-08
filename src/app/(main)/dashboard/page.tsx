@@ -16,8 +16,9 @@ import axios from 'axios'
 
   export default function Dashboard() {
   
-  const [username, setUsername] = useState('')
-  const [email, setEmail] = useState('')
+  const [username, setUsername] = useState<string>('')
+  const [email, setEmail] = useState<string>('')
+  const [avatar, setAvatar] = useState<string | null>(null);
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -35,9 +36,9 @@ import axios from 'axios'
     })
     .then(response => {
       console.log(response);
-      console.log(response.data.data)
       setUsername(response.data.data.name)
       setEmail(response.data.data.email)
+      setAvatar(response.data.data.avatar_path)
     })
     .catch(error => {
       console.error('❌ Error:', error);
@@ -53,7 +54,7 @@ import axios from 'axios'
           {/* Profile Info */}
           <div className="flex items-center gap-4">
             <div className="relative w-28 h-28">
-              <Image src="/images/user.jpg" alt="User" fill className="rounded-full object-cover" />
+              <Image src={avatar || '/images/default-avatar.svg'} alt={username} fill className="rounded-full object-cover" />
             </div>
             <div>
               <h4 className="text-xl font-semibold">{username}</h4>
