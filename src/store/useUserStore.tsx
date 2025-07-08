@@ -13,8 +13,7 @@ const useUserStore = create<UserStore>((set) => ({
   email: '',
   avatar: null,
   bio: '',
-  setUser: (data) => set(data),
-  
+  setUser: (user) => set(state => ({ ...state, ...user })),
 }));
 
 export default useUserStore

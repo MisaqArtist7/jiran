@@ -1,5 +1,5 @@
 "use client"
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import Image from 'next/image'
 import LocationIcon from '@/components/icons/LocationIcon'
 import LinkedinIcon from '@/components/icons/LinkedinIcon'
@@ -13,10 +13,11 @@ import JobOutlineIcon from '@/components/icons/JobOutlineIcon'
 import CommunityOutlineIcon from '@/components/icons/CommunityOutlineIcon'
 import Link from 'next/link'
 import axios from 'axios'
-import useUserStore from '@/store/useUserStore'
 
   export default function Dashboard() {
-  const { name, email, avatar, setUser } = useUserStore();
+  const [username, setUsername] = useState<string>('')
+  const [email, setEmail] = useState<string>('')
+  const [avatar, setAvatar] = useState<string | null>(null);
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -34,18 +35,14 @@ import useUserStore from '@/store/useUserStore'
     })
     .then(response => {
       console.log(response);
-      const userData = response.data.data;
-      setUser({
-        name: userData.name,
-        email: userData.email,
-        avatar: userData.avatar_path,
-        bio: userData.bio,
-      });
+      setUsername(response.data.data.name)
+      setEmail(response.data.data.email)
+      setAvatar(response.data.data.avatar_path)
     })
     .catch(error => {
       console.error('❌ Error:', error);
     });
-  }, [setUser]);
+  }, []);
 
   return (
     <main className='container'>
@@ -56,10 +53,10 @@ import useUserStore from '@/store/useUserStore'
           {/* Profile Info */}
           <div className="flex items-center gap-4">
             <div className="relative w-28 h-28">
-              <Image src={avatar || '/images/default-avatar.svg'} alt={name} fill className="rounded-full object-cover" />
+              <Image src={avatar || '/images/default-avatar.svg'} alt={username} fill className="rounded-full object-cover" />
             </div>
             <div>
-              <h4 className="text-xl font-semibold">{name}</h4>
+              <h4 className="text-xl font-semibold">{username}</h4>
               <span className="text-sm text-gray-900">{email}</span>
             </div>
           </div>

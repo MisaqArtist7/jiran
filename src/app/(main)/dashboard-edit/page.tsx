@@ -3,14 +3,14 @@ import React, { useState } from 'react';
 import { ExclamationCircleIcon, PlusIcon, MapPinIcon, MapIcon } from '@heroicons/react/24/outline';
 import Image from 'next/image';
 import axios from 'axios';
-// import useUserStore from '@/store/useUserStore'
 
 export default function DashboardEdit() {
 
   const [avatar, setAvatar] = useState<string | null>(null);
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
+  const [userId, setUserId] = useState<number | string>("");
+  // const [gender, setGender] = useState("");
   const [bio, setBio] = useState("");
+  // const [socialLinks, setSocialLinks] = useState("");
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
@@ -22,7 +22,6 @@ export default function DashboardEdit() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log({ avatar, name, email, bio });
     const token = localStorage.getItem('token');
 
     if (!token) {
@@ -34,8 +33,7 @@ export default function DashboardEdit() {
       'https://jiran-api.com/api/v1/auth/edit-profile',
       {
         avatar,  
-        name,
-        email,
+        userId,
         bio,
       },
       {
@@ -47,8 +45,7 @@ export default function DashboardEdit() {
     )
     .then((response) => {
       console.log("✅ Profile updated:", response.data);
-      setName('');
-      setEmail('');
+      setUserId('');
       setBio('');
 
       return axios.get(
@@ -64,8 +61,7 @@ export default function DashboardEdit() {
     .then((secondResponse) => {
       console.log("✅ Second API Response:", secondResponse.data);
       const userData = secondResponse.data.data;
-      setName(userData.name || "");
-      setEmail(userData.email || "");
+      setUserId(userData.id)
       setAvatar(userData.avatar_path || null);
       setBio(userData.bio || "");
     })
@@ -99,13 +95,8 @@ export default function DashboardEdit() {
 
             <form onSubmit={handleSubmit} action="" className='flex flex-col justify-center gap-3 my-4 px-3 w-full'>   
                 <div className='flex items-center justify-between w-full'>
-                  <label htmlFor="Name" className='text-[var(--navy)]'>Name</label>
-                  <input type="text" value={name} onChange={(event)=> setName(event.target.value)} className='border-b px-3 py-2 border-gray-300 w-[85%]' placeholder='Your Name' />
-                </div>
-
-                <div className='flex items-center justify-between w-full'>
-                  <label htmlFor="E-mail" className='text-[var(--navy)]'>Email</label>
-                  <input type="text" value={email} onChange={(event)=> setEmail(event.target.value)} className='border-b px-3 py-2 border-gray-300 w-[85%]' placeholder='Your E-mail' />
+                  <label htmlFor="Name" className='text-[var(--navy)]'>user Id</label>
+                  <input type="text" value={userId} onChange={(event)=> setUserId(event.target.value)} className='border-b px-3 py-2 border-gray-300 w-[85%]' placeholder='Your Id' />
                 </div>
 
                 <div className='flex items-center justify-between w-full'>
@@ -137,7 +128,7 @@ export default function DashboardEdit() {
                 </div>
 
                 <div className='w-full flex-row-center gap-2 p-3'>
-                  <button className='flex-row-center py-2.5 border border-[var(--primaryColor)] bg-[var(--primaryColor)] hover:bg-blue-600 text-white w-1/2 rounded transition-colors duration-75'>Done</button>
+                  <button type='submit' className='flex-row-center py-2.5 border border-[var(--primaryColor)] bg-[var(--primaryColor)] hover:bg-blue-600 text-white w-1/2 rounded transition-colors duration-75'>Done</button>
                   <button className='flex-row-center py-2.5 border border-red-600 text-red-600 w-1/2 rounded hover:bg-red-600 hover:text-white transition-colors duration-75'>Discard</button>
                 </div>
 
