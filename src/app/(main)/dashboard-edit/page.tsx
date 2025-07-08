@@ -1,13 +1,28 @@
-"use client"
-import React from 'react'
-import { ExclamationCircleIcon, PlusIcon, MapPinIcon, MapIcon } from '@heroicons/react/24/outline'
-import Image from 'next/image'
-import axios from 'axios'
-import { useEffect } from 'react'
+"use client";
+import React, { useState } from 'react';
+import { ExclamationCircleIcon, PlusIcon, MapPinIcon, MapIcon } from '@heroicons/react/24/outline';
+import Image from 'next/image';
+import axios from 'axios';
+// import useUserStore from '@/store/useUserStore'
 
 export default function DashboardEdit() {
 
-  useEffect(() => {
+  const [avatar, setAvatar] = useState<string | null>(null);
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [bio, setBio] = useState("");
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      const file = e.target.files[0];
+      const previewURL = URL.createObjectURL(file);
+      setAvatar(previewURL);
+    }
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    console.log({ avatar, name, email, bio });
     const token = localStorage.getItem('token');
 
     if (!token) {
@@ -17,27 +32,47 @@ export default function DashboardEdit() {
 
     axios.post(
       'https://jiran-api.com/api/v1/auth/edit-profile',
-      {}, 
+      {
+        avatar,  
+        name,
+        email,
+        bio,
+      },
       {
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,
-        },
+        }
       }
     )
     .then((response) => {
-      console.log('✅ Success:', response.data);
-      return response.data;
+      console.log("✅ Profile updated:", response.data);
+      setName('');
+      setEmail('');
+      setBio('');
+
+      return axios.get(
+        'https://jiran-api.com/api/v1/auth/show',
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          }
+        }
+      );
     })
-    .then((data) => {
-      console.log(data);
+    .then((secondResponse) => {
+      console.log("✅ Second API Response:", secondResponse.data);
+      const userData = secondResponse.data.data;
+      setName(userData.name || "");
+      setEmail(userData.email || "");
+      setAvatar(userData.avatar_path || null);
+      setBio(userData.bio || "");
     })
     .catch((error) => {
-      console.error(error);
+      console.error("⛔ Error:", error);
     });
-  }, []);
-
-  
+  };
 
   return (
     <main className='container my-11'>
@@ -51,25 +86,31 @@ export default function DashboardEdit() {
                 <ExclamationCircleIcon className='w-7 h-7'/>
                 Personal Information
               </h6>
-              <div className="relative w-24 h-24">
-                <Image src="/images/user.jpg" alt="User" fill className="rounded-full object-cover" />
-              </div>
+            {/* Avatar preview */}
+            <div className="relative w-24 h-24 mt-3">
+              <Image src={avatar || "/images/default-avatar.svg"} alt="User" fill className="rounded-full object-cover" />
             </div>
+            {/* Upload Button */}
+            <label htmlFor="avatar-upload" className="mt-2 cursor-pointer text-[var(--primaryColor)] hover:underline text-sm" >
+              Upload new photo
+            </label>
+            <input type="file" accept="image/*" id="avatar-upload" className="hidden" onChange={handleFileChange} />
+          </div>
 
-            <form action="" className='flex flex-col justify-center gap-3 my-4 px-3 w-full'>   
+            <form onSubmit={handleSubmit} action="" className='flex flex-col justify-center gap-3 my-4 px-3 w-full'>   
                 <div className='flex items-center justify-between w-full'>
                   <label htmlFor="Name" className='text-[var(--navy)]'>Name</label>
-                  <input type="text" className='border-b px-3 py-2 border-gray-300 w-[85%]' placeholder='Your Name' />
+                  <input type="text" value={name} onChange={(event)=> setName(event.target.value)} className='border-b px-3 py-2 border-gray-300 w-[85%]' placeholder='Your Name' />
                 </div>
 
                 <div className='flex items-center justify-between w-full'>
                   <label htmlFor="E-mail" className='text-[var(--navy)]'>Email</label>
-                  <input type="text" className='border-b px-3 py-2 border-gray-300 w-[85%]' placeholder='Your E-mail' />
+                  <input type="text" value={email} onChange={(event)=> setEmail(event.target.value)} className='border-b px-3 py-2 border-gray-300 w-[85%]' placeholder='Your E-mail' />
                 </div>
 
                 <div className='flex items-center justify-between w-full'>
                   <label htmlFor="Bio" className='text-[var(--navy)]'>Bio</label>
-                  <input type="text" className='border-b px-3 py-2 border-gray-300 w-[85%]' placeholder='About yourself' />
+                  <input type="text" value={bio} onChange={(event)=> setBio(event.target.value)} className='border-b px-3 py-2 border-gray-300 w-[85%]' placeholder='About yourself' />
                 </div>
 
                 <div className='flex items-center gap-x-11 w-full'>
@@ -94,15 +135,14 @@ export default function DashboardEdit() {
                   <label htmlFor="Social Links" className='text-[var(--navy)]'>Social Links</label>
                   <PlusIcon className='w-6 h-6 text-[var(--navy)] hover:text-[var(--primaryColor)] hover:cursor-pointer'/>
                 </div>
+
+                <div className='w-full flex-row-center gap-2 p-3'>
+                  <button className='flex-row-center py-2.5 border border-[var(--primaryColor)] bg-[var(--primaryColor)] hover:bg-blue-600 text-white w-1/2 rounded transition-colors duration-75'>Done</button>
+                  <button className='flex-row-center py-2.5 border border-red-600 text-red-600 w-1/2 rounded hover:bg-red-600 hover:text-white transition-colors duration-75'>Discard</button>
+                </div>
+
             </form>
-
           </div>
-
-          <div className='w-full flex-row-center gap-2 p-3'>
-            <button className='flex-row-center py-2.5 border border-[var(--primaryColor)] bg-[var(--primaryColor)] hover:bg-blue-600 text-white w-1/2 rounded transition-colors duration-75'>Done</button>
-            <button className='flex-row-center py-2.5 border border-red-600 text-red-600 w-1/2 rounded hover:bg-red-600 hover:text-white transition-colors duration-75'>Discard</button>
-          </div>
-
         </div>
 
         <div className='w-1/2 bg-white flex flex-col items-start shadow rounded-lg p-4'>

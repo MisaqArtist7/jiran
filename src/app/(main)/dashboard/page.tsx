@@ -1,5 +1,5 @@
 "use client"
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import Image from 'next/image'
 import LocationIcon from '@/components/icons/LocationIcon'
 import LinkedinIcon from '@/components/icons/LinkedinIcon'
@@ -13,12 +13,10 @@ import JobOutlineIcon from '@/components/icons/JobOutlineIcon'
 import CommunityOutlineIcon from '@/components/icons/CommunityOutlineIcon'
 import Link from 'next/link'
 import axios from 'axios'
+import useUserStore from '@/store/useUserStore'
 
   export default function Dashboard() {
-  
-  const [username, setUsername] = useState<string>('')
-  const [email, setEmail] = useState<string>('')
-  const [avatar, setAvatar] = useState<string | null>(null);
+  const { name, email, avatar, setUser } = useUserStore();
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -36,14 +34,18 @@ import axios from 'axios'
     })
     .then(response => {
       console.log(response);
-      setUsername(response.data.data.name)
-      setEmail(response.data.data.email)
-      setAvatar(response.data.data.avatar_path)
+      const userData = response.data.data;
+      setUser({
+        name: userData.name,
+        email: userData.email,
+        avatar: userData.avatar_path,
+        bio: userData.bio,
+      });
     })
     .catch(error => {
       console.error('❌ Error:', error);
     });
-  }, []);
+  }, [setUser]);
 
   return (
     <main className='container'>
@@ -54,10 +56,10 @@ import axios from 'axios'
           {/* Profile Info */}
           <div className="flex items-center gap-4">
             <div className="relative w-28 h-28">
-              <Image src={avatar || '/images/default-avatar.svg'} alt={username} fill className="rounded-full object-cover" />
+              <Image src={avatar || '/images/default-avatar.svg'} alt={name} fill className="rounded-full object-cover" />
             </div>
             <div>
-              <h4 className="text-xl font-semibold">{username}</h4>
+              <h4 className="text-xl font-semibold">{name}</h4>
               <span className="text-sm text-gray-900">{email}</span>
             </div>
           </div>
