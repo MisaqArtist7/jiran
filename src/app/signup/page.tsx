@@ -14,25 +14,26 @@ import './register.css'
 export default function SignUP() {
   // Define Zod schema for form validation
 
-const signUpSchema = z
-  .object({
-    name: z.string().min(8, 'Name must be at least 8 characters'),
-    email: z.string().email('Invalid email address'),
+const signUpSchema = z.object({
+    name: z.string()
+    .min(8, { message: 'Name must be at least 8 characters' })
+    .regex(/^[a-zA-Z\s]+$/, { message: 'Name may only contain letters and spaces.' }),
+    email: z.string().email( { message: 'Invalid email address' }),
     password: z
       .string()
       .min(8, 'Password must be at least 8 characters')
-      .regex(/[A-Z]/, 'Password must include at least one uppercase letter')
-      .regex(/[0-9]/, 'Password must include at least one number')
-      .regex(/[^A-Za-z0-9]/, 'Password must include at least one symbol (e.g. @, #, !)'),
-    password_confirmation: z.string(),
-    // agreeTerm: z.boolean().refine(val => val === true, {
-    //   message: "You must agree to the terms",
-    // }),
-  })
-  .refine((data) => data.password === data.password_confirmation, {
-    message: "Passwords don't match",
-    path: ['password_confirmation'],
-  });
+      .regex(/[A-Z]/, { message: 'Password must include at least one uppercase letter' })
+      .regex(/[0-9]/, { message: 'Password must include at least one number' })
+      .regex(/[^A-Za-z0-9]/, { message: 'Password must include at least one symbol (e.g. @, #, !)' }),
+      // agreeTerm: z.boolean().refine(val => val === true, {
+        //   message: "You must agree to the terms",
+        // }),
+      password_confirmation: z.string(),
+    })
+    .refine((data) => data.password === data.password_confirmation, {
+      message: "Passwords don't match",
+      path: ['password_confirmation'],
+    });
 
   // Infer TypeScript type from Zod schema
   type signUpFormInputs = z.infer<typeof signUpSchema>;
@@ -116,9 +117,7 @@ const signUpSchema = z
   return (
     <main className="flex flex-col items-center justify-center min-h-screen p-4">
 
-      <form onSubmit={handleSubmit(onSubmit)} method='post'
-        className="bg-white p-8 rounded-md shadow-md w-full max-w-sm"
-      >
+      <form onSubmit={handleSubmit(onSubmit)} method='post' className="bg-white p-8 rounded-md shadow-md w-full max-w-sm" >
         <h2 className="text-2xl font-bold mb-6 text-center">Sign up to your account</h2>
 
         {/* Show location error message if any */}
@@ -248,10 +247,7 @@ const signUpSchema = z
           Sign Up
         </button> */}
 
-        <button
-          type="submit"
-          className={`w-full mt-6 text-white py-2 rounded-md transition bg-[var(--primaryColor)]`}
-        >
+        <button type="submit" className={`w-full mt-6 text-white py-2 rounded-md transition bg-[var(--primaryColor)]`} >
           Sign Up
         </button>
 
