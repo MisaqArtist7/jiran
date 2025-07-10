@@ -94,10 +94,10 @@ export default function DashboardEdit() {
           </div>
 
             <form onSubmit={handleSubmit} action="" className='flex flex-col justify-center gap-3 my-4 px-3 w-full'>   
-                <div className='flex items-center justify-between w-full'>
+                {/* <div className='flex items-center justify-between w-full'>
                   <label htmlFor="Name" className='text-[var(--navy)]'>user Id</label>
                   <input type="text" value={userId} onChange={(event)=> setUserId(event.target.value)} className='border-b px-3 py-2 border-gray-300 w-[85%]' placeholder='Your Id' />
-                </div>
+                </div> */}
 
                 <div className='flex items-center justify-between w-full'>
                   <label htmlFor="Bio" className='text-[var(--navy)]'>Bio</label>
