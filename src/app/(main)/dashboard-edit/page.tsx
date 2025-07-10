@@ -5,8 +5,20 @@ import Image from 'next/image';
 import axios from 'axios';
 import dynamic from "next/dynamic";
 import 'leaflet/dist/leaflet.css';
+import L from "leaflet";
+
 
 export default function DashboardEdit() {
+  const svgIcon = `
+   <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" stroke=""><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path fill-rule="evenodd" clip-rule="evenodd" d="M3.37892 10.2236L8 16L12.6211 10.2236C13.5137 9.10788 14 7.72154 14 6.29266V6C14 2.68629 11.3137 0 8 0C4.68629 0 2 2.68629 2 6V6.29266C2 7.72154 2.4863 9.10788 3.37892 10.2236ZM8 8C9.10457 8 10 7.10457 10 6C10 4.89543 9.10457 4 8 4C6.89543 4 6 4.89543 6 6C6 7.10457 6.89543 8 8 8Z" fill="#e84118"></path> </g></svg>
+  `;
+  const customSvgIcon = L.divIcon({
+  html: svgIcon,
+  className: "", 
+  iconSize: [33, 33],
+  iconAnchor: [16, 32],
+  
+});
   const MapContainer = dynamic(
   () => import("react-leaflet").then((mod) => mod.MapContainer),
   { ssr: false }
@@ -26,8 +38,6 @@ export default function DashboardEdit() {
     () => import("react-leaflet").then((mod) => mod.Popup),
     { ssr: false }
   );
-
-
   const [avatar, setAvatar] = useState<string | null>(null);
   const [userId, setUserId] = useState<number | string>("");
   // const [gender, setGender] = useState("");
@@ -203,11 +213,11 @@ export default function DashboardEdit() {
               <div className='flex items-center justify-between gap-2 w-full'>
                 <div className='w-1/2'>
                   <label className='text-[var(--navy)]'>Latitude</label>
-                  <input type="text" value={lat ?? ""}  onChange={(e) => setLat(Number(e.target.value))} className='border rounded px-3 py-2 border-gray-300 w-full' placeholder='-' />
+                  <input type="text" value={lat ?? ""} className='border rounded px-3 py-2 border-gray-300 w-full' placeholder='-' />
                 </div>
                 <div className='w-1/2'>
                   <label className='text-[var(--navy)]'>Latitude</label>
-                  <input type="text" value={lng ?? ""} onChange={(e) => setLng(Number(e.target.value))} className='border rounded px-3 py-2 border-gray-300 w-full' placeholder='-' />
+                  <input type="text" value={lng ?? ""} className='border rounded px-3 py-2 border-gray-300 w-full' placeholder='-' />
                 </div>
               </div>
 
@@ -223,7 +233,7 @@ export default function DashboardEdit() {
                       url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                       attribution='&copy; OpenStreetMap contributors'
                     />
-                    <Marker position={[lat, lng]}>
+                    <Marker position={[lat, lng]} icon={customSvgIcon}>
                       <Popup>
                        your location: {lat}, {lng}
                       </Popup>
