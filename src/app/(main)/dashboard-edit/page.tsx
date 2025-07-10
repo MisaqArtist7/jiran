@@ -1,8 +1,10 @@
 "use client";
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { ExclamationCircleIcon, PlusIcon, MapPinIcon, MapIcon } from '@heroicons/react/24/outline';
 import Image from 'next/image';
 import axios from 'axios';
+import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'
+import 'leaflet/dist/leaflet.css';
 
 export default function DashboardEdit() {
 
@@ -19,6 +21,30 @@ export default function DashboardEdit() {
       setAvatar(previewURL);
     }
   };
+
+  const [lat, setLat] = useState<number>()
+  const [lng, setLng] = useState<number>()
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      console.log("⛔ No token found!");
+      return;
+    }
+
+    axios.get('https://jiran-api.com/api/v1/auth/show', {
+      headers: {
+        'Content-Type': 'application/json',
+         Authorization: `Bearer ${token}`,
+      }
+    })
+    .then((response) => {
+      console.log(response.data.data)     
+      const userData = response.data.data
+      setLat(Number(userData["loc-lat"]))
+      setLng(Number(userData["loc-lng"]))
+    })
+  }, [])
+
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -149,15 +175,37 @@ export default function DashboardEdit() {
               <div className='flex items-center justify-between gap-2 w-full'>
                 <div className='w-1/2'>
                   <label className='text-[var(--navy)]'>Latitude</label>
-                  <input type="text" className='border rounded px-3 py-2 border-gray-300 w-full' placeholder='-' />
+                  <input type="text" value={lat} className='border rounded px-3 py-2 border-gray-300 w-full' placeholder='-' />
                 </div>
                 <div className='w-1/2'>
                   <label className='text-[var(--navy)]'>Latitude</label>
-                  <input type="text" className='border rounded px-3 py-2 border-gray-300 w-full' placeholder='-' />
+                  <input type="text" value={lng} className='border rounded px-3 py-2 border-gray-300 w-full' placeholder='-' />
                 </div>
               </div>
 
-              <div className='border border-gray-300 shadow flex-row-center w-full p-11 rounded'>map</div>
+              <div className='border border-gray-300 shadow flex-row-center w-full p-2 rounded' style={{ height: '400px' }}>
+                {lat !== undefined && lng !== undefined ? (
+                  <MapContainer
+                    center={[lat, lng]}
+                    zoom={13}
+                    scrollWheelZoom={true}
+                    style={{ height: '100%', width: '100%', borderRadius: '0.5rem' }}
+                  >
+                    <TileLayer
+                      url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                      attribution='&copy; OpenStreetMap contributors'
+                    />
+                    <Marker position={[lat, lng]}>
+                      <Popup>
+                        موقعیت شما: {lat}, {lng}
+                      </Popup>
+                    </Marker>
+                  </MapContainer>
+                ) : (
+                <p>Loading location...</p>
+                )}
+              </div>
+
 
             </div>
           </form>

@@ -59,7 +59,7 @@ const signUpSchema = z
       setLocationError('Your browser does not support geolocation.');
       return;
     }
-
+    
     // Get current position asynchronously
     navigator.geolocation.getCurrentPosition(
       (pos) => {
@@ -98,7 +98,7 @@ const signUpSchema = z
   )
   .then((response) => {
     console.log('✅ Success:', response.data);
-    router.push('/dashboard'); // go to dashboard page
+    router.push('/login'); // go to login page
     })
     .catch((error) => {
       if (error.response && error.response.status === 422) {
