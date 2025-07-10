@@ -3,10 +3,30 @@ import React, { useEffect, useState } from 'react';
 import { ExclamationCircleIcon, PlusIcon, MapPinIcon, MapIcon } from '@heroicons/react/24/outline';
 import Image from 'next/image';
 import axios from 'axios';
-import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'
+import dynamic from "next/dynamic";
 import 'leaflet/dist/leaflet.css';
 
 export default function DashboardEdit() {
+  const MapContainer = dynamic(
+  () => import("react-leaflet").then((mod) => mod.MapContainer),
+  { ssr: false }
+  );
+
+  const TileLayer = dynamic(
+    () => import("react-leaflet").then((mod) => mod.TileLayer),
+    { ssr: false }
+  );
+
+  const Marker = dynamic(
+    () => import("react-leaflet").then((mod) => mod.Marker),
+    { ssr: false }
+  );
+
+  const Popup = dynamic(
+    () => import("react-leaflet").then((mod) => mod.Popup),
+    { ssr: false }
+  );
+
 
   const [avatar, setAvatar] = useState<string | null>(null);
   const [userId, setUserId] = useState<number | string>("");
@@ -183,15 +203,15 @@ export default function DashboardEdit() {
               <div className='flex items-center justify-between gap-2 w-full'>
                 <div className='w-1/2'>
                   <label className='text-[var(--navy)]'>Latitude</label>
-                  <input type="text" value={lat ?? ""} className='border rounded px-3 py-2 border-gray-300 w-full' placeholder='-' />
+                  <input type="text" value={lat ?? ""}  onChange={(e) => setLat(Number(e.target.value))} className='border rounded px-3 py-2 border-gray-300 w-full' placeholder='-' />
                 </div>
                 <div className='w-1/2'>
                   <label className='text-[var(--navy)]'>Latitude</label>
-                  <input type="text" value={lng ?? ""} className='border rounded px-3 py-2 border-gray-300 w-full' placeholder='-' />
+                  <input type="text" value={lng ?? ""} onChange={(e) => setLng(Number(e.target.value))} className='border rounded px-3 py-2 border-gray-300 w-full' placeholder='-' />
                 </div>
               </div>
 
-              <div className='border border-gray-300 shadow flex-row-center w-full p-2 rounded' style={{ height: '400px' }}>
+              <div className='border border-gray-300 shadow flex-row-center w-full p-2 rounded h-[400px]'>
                 {lat !== undefined && lng !== undefined ? (
                   <MapContainer
                     center={[lat, lng]}
@@ -205,7 +225,7 @@ export default function DashboardEdit() {
                     />
                     <Marker position={[lat, lng]}>
                       <Popup>
-                        موقعیت شما: {lat}, {lng}
+                       your location: {lat}, {lng}
                       </Popup>
                     </Marker>
                   </MapContainer>
