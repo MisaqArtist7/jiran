@@ -81,10 +81,13 @@ const signUpSchema = z
     // Check if location data is available before submitting
     if (!location) {
       alert('Please allow access to your location.');
-      return;
     }
     // Combine form data with location info
-    const dataToSend = { ...data, loc_lat: location.loc_lat, loc_lng: location.loc_lng };
+    const dataToSend = { ...data, 
+      ...(location && {
+      loc_lat: location.loc_lat,
+      loc_lng: location.loc_lng,
+  }) };
     console.log('Data to send:', dataToSend);
     
     axios.post('https://jiran-api.com/api/v1/auth/register', dataToSend, {
