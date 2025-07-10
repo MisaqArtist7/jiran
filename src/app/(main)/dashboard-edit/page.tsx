@@ -40,9 +40,17 @@ export default function DashboardEdit() {
     .then((response) => {
       console.log(response.data.data)     
       const userData = response.data.data
-      setLat(Number(userData["loc-lat"]))
-      setLng(Number(userData["loc-lng"]))
+      const latVal = userData["loc-lat"];
+      const lngVal = userData["loc-lng"];
+
+      if (latVal && lngVal) {
+        setLat(Number(latVal));
+        setLng(Number(lngVal));
+      } else {
+        console.log("⛔ مختصات خالی یا نامعتبر!");
+      }
     })
+
   }, [])
 
 
@@ -175,11 +183,11 @@ export default function DashboardEdit() {
               <div className='flex items-center justify-between gap-2 w-full'>
                 <div className='w-1/2'>
                   <label className='text-[var(--navy)]'>Latitude</label>
-                  <input type="text" value={lat} className='border rounded px-3 py-2 border-gray-300 w-full' placeholder='-' />
+                  <input type="text" value={lat ?? ""} className='border rounded px-3 py-2 border-gray-300 w-full' placeholder='-' />
                 </div>
                 <div className='w-1/2'>
                   <label className='text-[var(--navy)]'>Latitude</label>
-                  <input type="text" value={lng} className='border rounded px-3 py-2 border-gray-300 w-full' placeholder='-' />
+                  <input type="text" value={lng ?? ""} className='border rounded px-3 py-2 border-gray-300 w-full' placeholder='-' />
                 </div>
               </div>
 
