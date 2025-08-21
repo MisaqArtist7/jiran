@@ -24,10 +24,7 @@ export default function HomePage() {
             { src: "/images/NeedsVector.svg", alt: "NeedsVector", label: "Needs" },
             { src: "/images/CommunityVector.svg", alt: "CommunityVector", label: "Community" },
           ].map(({ src, alt, label }) => (
-            <div
-              key={label}
-              className="bg-white p-4 shadow rounded flex flex-col items-center justify-between h-[277px] w-full max-w-[250px]"
-            >
+            <div key={label} className="bg-white p-4 shadow rounded flex flex-col items-center justify-between h-[277px] w-full max-w-[250px]" >
               <Image src={src} alt={alt} width={190} height={174} />
               <h4>{label}</h4>
             </div>
