@@ -9,10 +9,7 @@ export default function HomePage() {
             <h1>Connect locally</h1>
             <p>Grow together</p>
           </div>
-          <a
-            href="#"
-            className="bg-[var(--primaryColor)] hover:bg-blue-600 text-white px-7 py-2 rounded"
-          >
+          <a href="#" className="bg-[var(--primaryColor)] hover:bg-blue-600 text-white px-7 py-2 rounded" >
             Join Your Local Network
           </a>
           <form action="">

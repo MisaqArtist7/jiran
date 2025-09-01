@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useState } from 'react';
-import { ExclamationCircleIcon, PlusIcon, MapPinIcon, MapIcon } from '@heroicons/react/24/outline';
+import { ExclamationCircleIcon, MapPinIcon, MapIcon } from '@heroicons/react/24/outline';
 import Image from 'next/image';
 import axios from 'axios';
 import dynamic from "next/dynamic";
@@ -14,7 +14,6 @@ export default function DashboardEdit() {
   className: "", 
   iconSize: [33, 33],
   iconAnchor: [16, 32],
-  
 });
   const MapContainer = dynamic(
   () => import("react-leaflet").then((mod) => mod.MapContainer),
@@ -41,17 +40,12 @@ export default function DashboardEdit() {
   const [bio, setBio] = useState("");
   // const [socialLinks, setSocialLinks] = useState("");
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      const file = e.target.files[0];
-      const previewURL = URL.createObjectURL(file);
-      setAvatar(previewURL);
-    }
-  };
-
+  const [gender, setGender] = useState<string>(""); 
+  const [socialLinks, setSocialLinks] = useState<string>(""); 
   const [lat, setLat] = useState<number>()
   const [lng, setLng] = useState<number>()
   useEffect(() => {
+    
     const token = localStorage.getItem('token');
     if (!token) {
       console.log("⛔ No token found!");
@@ -80,6 +74,16 @@ export default function DashboardEdit() {
 
   }, [])
 
+  const [avatarFile, setAvatarFile] = useState<File | null>(null);
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      const file = e.target.files[0];
+      setAvatarFile(file);
+      const previewURL = URL.createObjectURL(file);
+      setAvatar(previewURL);
+    }
+  };
+
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -89,17 +93,22 @@ export default function DashboardEdit() {
       console.log("⛔ No token found!");
       return;
     }
+    const formData = new FormData();
+    if (avatarFile) {
+      formData.append("avatar", avatarFile);
+    }
+    formData.append("userId", userId.toString());
+    formData.append("bio", bio);
+    if (gender) formData.append("gender", gender);
+    if (socialLinks) formData.append("socialLinks", socialLinks);
+    if (avatarFile) {
+      formData.append("avatar", avatarFile);
+    }
 
     axios.post(
-      'https://jiran-api.com/api/v1/auth/edit-profile',
-      {
-        avatar,  
-        userId,
-        bio,
-      },
+      'https://jiran-api.com/api/v1/auth/edit-profile', formData,
       {
         headers: {
-          'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,
         }
       }
@@ -108,12 +117,10 @@ export default function DashboardEdit() {
       console.log("✅ Profile updated:", response.data);
       setUserId('');
       setBio('');
-
       return axios.get(
         'https://jiran-api.com/api/v1/auth/show',
         {
           headers: {
-            'Content-Type': 'application/json',
             Authorization: `Bearer ${token}`,
           }
         }
@@ -166,32 +173,57 @@ export default function DashboardEdit() {
                 </div>
 
                 <div className='flex items-center gap-x-11 w-full'>
-                  <label htmlFor="Gender" className='text-[var(--navy)]'>Gender</label>
-                  <div className='flex items-center gap-7'>
-                    <div className='flex-row-center gap-1'>
-                      <input type="checkbox" name="fwefwef" id="" />
-                      <span>Male</span>
-                    </div>
-                    <div className='flex-row-center gap-1'>
-                      <input type="checkbox" name="fwefwef" id="" />
-                      <span>Female</span>
-                    </div>
-                    <div className='flex-row-center gap-1'>
-                      <input type="checkbox" name="fwefwef" id="" />
-                      <span>Other</span>
-                    </div>
+                <label className='text-[var(--navy)]'>Gender</label>
+                <div className='flex items-center gap-7'>
+                  <div className='flex-row-center gap-1'>
+                    <input 
+                      type="radio" 
+                      name="gender" 
+                      value="male" 
+                      checked={gender === "male"} 
+                      onChange={(e) => setGender(e.target.value)} 
+                    />
+                    <span>Male</span>
+                  </div>
+                  <div className='flex-row-center gap-1'>
+                    <input 
+                      type="radio" 
+                      name="gender" 
+                      value="female" 
+                      checked={gender === "female"} 
+                      onChange={(e) => setGender(e.target.value)} 
+                    />
+                    <span>Female</span>
+                  </div>
+                  <div className='flex-row-center gap-1'>
+                    <input 
+                      type="radio" 
+                      name="gender" 
+                      value="other" 
+                      checked={gender === "other"} 
+                      onChange={(e) => setGender(e.target.value)} 
+                    />
+                    <span>Other</span>
                   </div>
                 </div>
+              </div>
 
-                <div className='flex items-center gap-3'>
-                  <label htmlFor="Social Links" className='text-[var(--navy)]'>Social Links</label>
-                  <PlusIcon className='w-6 h-6 text-[var(--navy)] hover:text-[var(--primaryColor)] hover:cursor-pointer'/>
-                </div>
 
-                <div className='w-full flex-row-center gap-2 p-3'>
-                  <button type='submit' className='flex-row-center py-2.5 border border-[var(--primaryColor)] bg-[var(--primaryColor)] hover:bg-blue-600 text-white w-1/2 rounded transition-colors duration-75'>Done</button>
-                  <button className='flex-row-center py-2.5 border border-red-600 text-red-600 w-1/2 rounded hover:bg-red-600 hover:text-white transition-colors duration-75'>Discard</button>
-                </div>
+                <div className='flex items-center justify-between w-full'>
+                <label htmlFor="SocialLinks" className='text-[var(--navy)]'>Social Links</label>
+                <input 
+                  type="text" 
+                  value={socialLinks} 
+                  onChange={(e) => setSocialLinks(e.target.value)} 
+                  className='border-b px-3 py-2 border-gray-300 w-[85%]' 
+                  placeholder='https://...' 
+                />
+              </div>
+
+              <div className='w-full flex-row-center gap-2 p-3'>
+                <button type='submit' className='flex-row-center py-2.5 border border-[var(--primaryColor)] bg-[var(--primaryColor)] hover:bg-blue-600 text-white w-1/2 rounded transition-colors duration-75'>Done</button>
+                <button className='flex-row-center py-2.5 border border-red-600 text-red-600 w-1/2 rounded hover:bg-red-600 hover:text-white transition-colors duration-75'>Discard</button>
+              </div>
 
             </form>
           </div>

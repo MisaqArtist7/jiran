@@ -64,33 +64,22 @@ const signUpSchema = z.object({
     // Get current position asynchronously
     navigator.geolocation.getCurrentPosition(
       (pos) => {
-        // On success, update location state with latitude and longitude
         setLocation({ loc_lat: pos.coords.latitude, loc_lng: pos.coords.longitude });
-        // Clear any previous error
         setLocationError(null);
       },
       () => {
-        // On error or if user denies permission, set error message
         setLocationError('Access to location was denied.');
       }
     );
   }, []);
 
   const router = useRouter();
-  // Handle form submission
+  const [loading, setLoading] = useState(false);
   const onSubmit = (data: signUpFormInputs) => {
-    // Check if location data is available before submitting
-    if (!location) {
-      alert('Please allow access to your location.');
-    }
-    // Combine form data with location info
-    const dataToSend = { ...data, 
-      ...(location && {
-      loc_lat: location.loc_lat,
-      loc_lng: location.loc_lng,
-  }) };
+    const dataToSend = { ...data, ...(location && { loc_lat: location.loc_lat, loc_lng: location.loc_lng, }) };
     console.log('Data to send:', dataToSend);
-    
+    setLoading(true);
+
     axios.post('https://jiran-api.com/api/v1/auth/register', dataToSend, {
       headers: {
         'Content-Type': 'application/json',
@@ -99,7 +88,7 @@ const signUpSchema = z.object({
   )
   .then((response) => {
     console.log('✅ Success:', response.data);
-    router.push('/login'); // go to login page
+    router.push('/dashboard'); 
     })
     .catch((error) => {
       if (error.response && error.response.status === 422) {
@@ -111,6 +100,9 @@ const signUpSchema = z.object({
       } else {
         console.error('❌ Other Error:', error);
       }
+    })
+    .finally(() => {
+      setLoading(false); 
     });
   }
 
@@ -247,9 +239,14 @@ const signUpSchema = z.object({
           Sign Up
         </button> */}
 
-        <button type="submit" className={`w-full mt-6 text-white py-2 rounded-md transition bg-[var(--primaryColor)]`} >
-          Sign Up
+        <button type="submit"
+          disabled={loading}
+          className={`w-full mt-6 text-white py-2 rounded-md transition
+            ${loading ? 'bg-gray-400 cursor-not-allowed' : 'bg-[var(--primaryColor)] hover:bg-blue-700'}`}
+        >
+          {loading ? "Please wait..." : "Sign Up"}
         </button>
+
 
         {/* Link to sign in page */}
         <p className="text-center mt-4 text-sm">
