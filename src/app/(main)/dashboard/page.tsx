@@ -84,15 +84,13 @@ export default function Dashboard() {
             href="/dashboard-edit"
             className="flex-row-center w-36 h-9 rounded-[5px] hover:bg-[var(--primaryColor)] hover:border-[var(--PrimaryColor)] hover:text-white border text-[var(--navy)] border-gray-300"
           >
-            {" "}
-            Edit profile{" "}
+            Edit profile
           </Link>
           <Link
             href="/dashboard-edit"
             className="flex-row-center w-36 h-9 rounded-[5px] hover:bg-[var(--primaryColor)] hover:border-[var(--PrimaryColor)] hover:text-white border text-[var(--navy)] border-gray-300"
           >
-            {" "}
-            Share profile{" "}
+            Share profile
           </Link>
         </div>
       </section>
@@ -120,7 +118,7 @@ export default function Dashboard() {
           </div>
         </div>
 
-        <div className="grid grid-cols-4 gap-x-11">
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 text-sm pb-4">
           <DashboardPost />
         </div>
       </section>
