@@ -88,6 +88,9 @@ const signUpSchema = z.object({
   )
   .then((response) => {
     console.log('✅ Success:', response.data);
+    const token = response.data.data.token;
+    localStorage.setItem('token', token);
+    console.log('📦 Token saved to localStorage:', token);
     router.push('/dashboard'); 
     })
     .catch((error) => {

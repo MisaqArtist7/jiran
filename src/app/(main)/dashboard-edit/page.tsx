@@ -15,6 +15,9 @@ export default function DashboardEdit() {
   iconSize: [33, 33],
   iconAnchor: [16, 32],
 });
+  const [username, setUsername] = useState<string>("");
+  const [email, setEmail] = useState<string>("");
+  
   const MapContainer = dynamic(
   () => import("react-leaflet").then((mod) => mod.MapContainer),
   { ssr: false }
@@ -61,6 +64,8 @@ export default function DashboardEdit() {
     .then((response) => {
       console.log(response.data.data)     
       const userData = response.data.data
+      setUsername(userData.name);
+      setEmail(userData.email);
       const latVal = userData["loc-lat"];
       const lngVal = userData["loc-lng"];
 
@@ -151,8 +156,19 @@ export default function DashboardEdit() {
                 Personal Information
               </h6>
             {/* Avatar preview */}
-            <div className="relative w-24 h-24 mt-3">
-              <Image src={avatar || "/images/default-avatar.svg"} alt="User" fill className="rounded-full object-cover" />
+            <div className="flex items-center gap-4">
+              <div className="relative w-28 h-28">
+                <Image
+                  src={avatar || "/images/default-avatar.svg"}
+                  alt={username}
+                  fill
+                  className="rounded-full object-cover"
+                />
+              </div>
+              <div>
+                <h4 className="text-xl font-semibold">{username}</h4>
+                <span className="text-sm text-gray-900">{email}</span>
+              </div>
             </div>
             {/* Upload Button */}
             <label htmlFor="avatar-upload" className="mt-2 cursor-pointer text-[var(--primaryColor)] hover:underline text-sm" >
@@ -236,7 +252,7 @@ export default function DashboardEdit() {
             Your Location
           </h6>
 
-          <form className='flex py-2'>
+          <form className='flex py-2 w-full'>
             <div className='flex flex-col justify-center gap-7 w-full'>
               
               <div className='flex items-center justify-between gap-2 w-full'>
@@ -275,7 +291,7 @@ export default function DashboardEdit() {
             </div>
           </form>
 
-          <div>
+          <div className='w-full'>
 
           <div>
             <h6 className='text-red-600 flex items-center pt-4'>

@@ -22,8 +22,7 @@ export default function Dashboard() {
       return;
     }
 
-    axios
-      .get("https://jiran-api.com/api/v1/auth/show", {
+    axios.get("https://jiran-api.com/api/v1/auth/show", {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
