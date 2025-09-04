@@ -1,5 +1,6 @@
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import Image from "next/image";
+import Link from "next/link";
 export default function HomePage() {
   return (
     <>
@@ -9,9 +10,12 @@ export default function HomePage() {
             <h1>Connect locally</h1>
             <p>Grow together</p>
           </div>
-          <a href="#" className="bg-[var(--primaryColor)] hover:bg-blue-600 text-white px-7 py-2 rounded" >
+          <Link
+            href="#"
+            className="bg-[var(--primaryColor)] hover:bg-blue-600 text-white px-7 py-2 rounded"
+          >
             Join Your Local Network
-          </a>
+          </Link>
           <form action="">
             <div className="flex items-center justify-between rounded shadow bg-white py-2 pr-2 pl-4 md:w-2xl lg:w-3xl">
               <input
