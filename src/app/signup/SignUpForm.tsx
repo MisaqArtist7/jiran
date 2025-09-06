@@ -37,9 +37,10 @@ export default function SignUpFormComponent() {
   const [pending, setPending] = useState(false)
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
+  
+
   const [location, setLocation] = useState<{ loc_lat: number; loc_lng: number } | null>(null)
   const [locationError, setLocationError] = useState<string | null>(null)
-
   useEffect(() => {
     if (!navigator.geolocation) {
       setLocationError('Your browser does not support geolocation.')
@@ -54,17 +55,17 @@ export default function SignUpFormComponent() {
     if (!location) {
       setLocationError('Your browser does not support geolocation.')
     }
-
     setPending(true)
-    try {
-      const res = await fetch('/api/register', {
+
+    try { // block: maybe someting went wrong
+      const response = await fetch('/api/register', { // connect to server via api
         method: 'POST',
-        body: JSON.stringify({ ...data, ...location }),
+        body: JSON.stringify({ ...data, ...location }), // convert object to json
         headers: { 'Content-Type': 'application/json' },
       })
-      const result = await res.json()
+      const result = await response.json() // read server's response
 
-      if (res.ok) {
+      if (response.ok) {
         localStorage.setItem('token', result.data.token)
         router.push('/dashboard')
       } else {
@@ -74,9 +75,12 @@ export default function SignUpFormComponent() {
           console.error(result)
         }
       }
-    } catch (err) {
+    } 
+
+    catch (err) {
       console.error(err)
-    } finally {
+    } 
+    finally {
       setPending(false)
     }
   }
