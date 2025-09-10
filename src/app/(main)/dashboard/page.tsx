@@ -21,7 +21,7 @@ export default function Dashboard() {
       console.log("⛔ No token found!");
       return;
     }
-
+    
     axios.get("https://jiran-api.com/api/v1/auth/show", {
         headers: {
           "Content-Type": "application/json",

@@ -5,9 +5,10 @@ import { useForm } from 'react-hook-form'
 import { useRouter } from 'next/navigation'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
-import Link from 'next/link'
+import Link from 'next/link'  
 import { EnvelopeIcon, UserIcon, KeyIcon } from '@heroicons/react/24/outline'
 import Image from 'next/image'
+
 import './register.css'
 
 const signUpSchema = z.object({
@@ -76,7 +77,6 @@ export default function SignUpFormComponent() {
         }
       }
     } 
-
     catch (err) {
       console.error(err)
     } 
