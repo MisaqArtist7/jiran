@@ -58,29 +58,30 @@ export default function DashboardEdit() {
       console.log("⛔ No token found!");
       return;
     }
-
-    axios.get('https://jiran-api.com/api/v1/auth/show', {
-      headers: {
-        'Content-Type': 'application/json',
-         Authorization: `Bearer ${token}`,
+    const fetchData = async () => {
+      try {
+        const response = await fetch("/api/dashboardEdit/authShow", {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          }
+        })
+        const data = await response.json();
+        if(response.ok){
+          console.log("full data =>", data)
+          const userData = data.data.data;
+          setUsername(userData.name);
+          setEmail(userData.email);
+          setLat(userData["loc-lat"]);
+          setLng(userData["loc-lng"]);
+        }
+        console.log(data);
       }
-    })
-    .then((response) => {
-      console.log(response.data.data)     
-      const userData = response.data.data
-      setUsername(userData.name);
-      setEmail(userData.email);
-      const latVal = userData["loc-lat"];
-      const lngVal = userData["loc-lng"];
-
-      if (latVal && lngVal) {
-        setLat(Number(latVal));
-        setLng(Number(lngVal));
-      } else {
-        console.log("⛔ مختصات خالی یا نامعتبر!");
+      catch (error) {
+        console.error("⛔ Error:", error);
       }
-    })
-
+    }
+    fetchData() 
   }, [])
 
 
@@ -173,10 +174,6 @@ export default function DashboardEdit() {
           </div>
 
             <form onSubmit={handleSubmit} action="" className='flex flex-col justify-center gap-3 my-4 px-3 w-full'>   
-                {/* <div className='flex items-center justify-between w-full'>
-                  <label htmlFor="Name" className='text-[var(--navy)]'>user Id</label>
-                  <input type="text" value={userId} onChange={(event)=> setUserId(event.target.value)} className='border-b px-3 py-2 border-gray-300 w-[85%]' placeholder='Your Id' />
-                </div> */}
 
                 <div className='flex items-center justify-between w-full'>
                   <label htmlFor="Bio" className='text-[var(--navy)]'>Bio</label>
@@ -206,16 +203,6 @@ export default function DashboardEdit() {
                     />
                     <span>Female</span>
                   </div>
-                  {/* <div className='flex-row-center gap-1'>
-                    <input 
-                      type="radio" 
-                      name="gender" 
-                      value="other" 
-                      checked={gender === "other"} 
-                      onChange={(e) => setGender(e.target.value)} 
-                    />
-                    <span>Other</span>
-                  </div> */}
                 </div>
               </div>
 
@@ -256,7 +243,7 @@ export default function DashboardEdit() {
                   <input type="text" value={lat ?? ""} className='border rounded px-3 py-2 border-gray-300 w-full' placeholder='-' />
                 </div>
                 <div className='w-1/2'>
-                  <label className='text-[var(--navy)]'>Latitude</label>
+                  <label className='text-[var(--navy)]'>Longitude</label>
                   <input type="text" value={lng ?? ""} className='border rounded px-3 py-2 border-gray-300 w-full' placeholder='-' />
                 </div>
               </div>
