@@ -22,7 +22,8 @@ export default function Header() {
               src="/images/Logo.svg"
               alt="Site Logo"
               width={77}
-              height={0}
+              height={50}
+              style={{ width: "auto", height: "auto" }}
             />
           </div>
           {/* <form action="" className='bg-[#F3F3F6] pr-3 pl-6 w-[369px] h-14 rounded-full flex items-center justify-between hover:bg-white border-2 border-white hover:border-[var(--primaryColor)]/10'>

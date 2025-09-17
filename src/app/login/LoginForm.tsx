@@ -28,8 +28,8 @@ export default function LoginForm() {
 
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [isPending, setIsPending] = useState<boolean>(false);
-
   const router = useRouter();
+
   const onSubmit = async (data: LoginFormInputs) => {
   setIsPending(true);
   console.log("Form data:", data);
