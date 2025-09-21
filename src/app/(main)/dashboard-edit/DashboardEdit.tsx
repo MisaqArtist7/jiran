@@ -2,7 +2,6 @@
 import React, { useEffect, useState } from 'react';
 import { ExclamationCircleIcon, MapPinIcon, MapIcon } from '@heroicons/react/24/outline';
 import Image from 'next/image';
-import axios from 'axios';
 import dynamic from "next/dynamic";
 import 'leaflet/dist/leaflet.css';
 import L from "leaflet";
@@ -18,9 +17,9 @@ export default function DashboardEdit() {
         iconAnchor: [16, 32],
     });
     const MapContainer = dynamic(
-  () => import("react-leaflet").then((mod) => mod.MapContainer),
-  { ssr: false }
-    );
+    () => import("react-leaflet").then((mod) => mod.MapContainer),
+    { ssr: false }
+      );
 
     const TileLayer = dynamic(
     () => import("react-leaflet").then((mod) => mod.TileLayer),
@@ -55,12 +54,12 @@ export default function DashboardEdit() {
 
     const token = localStorage.getItem('token');
     if (!token) {
-      console.log("⛔ No token found!");
+      // console.log("⛔ No token found!");
       return;
     }
     const fetchData = async () => {
       try {
-        const response = await fetch("/api/dashboardEdit/authShow", {
+        const response = await fetch('https://jiran-api.com/api/v1/auth/show', {
           headers: {
             'Content-Type': 'application/json',
             Authorization: `Bearer ${token}`,
@@ -68,14 +67,13 @@ export default function DashboardEdit() {
         })
         const data = await response.json();
         if(response.ok){
-          console.log("full data =>", data)
-          const userData = data.data.data;
+          const userData = data.data;
+          console.log("full data =>", userData)
           setUsername(userData.name);
           setEmail(userData.email);
-          setLat(userData["loc-lat"]);
-          setLng(userData["loc-lng"]);
+          setLat(userData?.["loc-lat"] ?? undefined);
+          setLng(userData?.["loc-lng"] ?? undefined);
         }
-        console.log(data);
       }
       catch (error) {
         console.error("⛔ Error:", error);
@@ -84,60 +82,71 @@ export default function DashboardEdit() {
     fetchData() 
   }, [])
 
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    const token = localStorage.getItem('token');
-
-    if (!token) {
-      console.log("⛔ No token found!");
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    const token = localStorage.getItem('token')
+    if(!token) {
+      console.log('⛔ No token found!')
       return;
     }
-    const formData = new FormData();
-    formData.append("bio", bio.toString());
-    formData.append("gender", gender);
-    formData.append("socialLinks", socialLinks);
-    formData.append("lat", lat?.toString() || "");
-    formData.append("lng", lng?.toString() || "");
+
+    const formData = new FormData()
+    if (avatar) {
+      formData.append("avatar", avatar)
+    }
+    formData.append("username", username)
+    formData.append("email", email);
+    formData.append("bio", bio.toString())
+    formData.append("gender", gender)
+    formData.append("socialLinks", socialLinks)
+    if (lat) formData.append("lat", lat.toString());
+    if (lng) formData.append("lng", lng.toString());
     formData.append("country", country);
     formData.append("city", city);
     formData.append("address", address.toString());
     formData.append("postCode", postCode.toString());
-    console.log("FormData contents:");
 
-    for (const item of formData.entries()) {
-        console.log("misaq" + item[0], item[1]);
-    }
-
-    axios.post(
-      'https://jiran-api.com/api/v1/auth/edit-profile', formData,
-      {
+    try {
+      const response = await fetch('https://jiran-api.com/api/v1/auth/edit-profile', {
+        method: "POST",
+        body: formData,
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${token}`
         }
+      });
+
+      if(!response.ok){
+        console.error("❌ Error updating profile");
+        return
       }
-    )
-    .then((response) => {
-      console.log("✅ Profile updated:", response.data);
-      return axios.get(
-        'https://jiran-api.com/api/v1/auth/show',
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          }
+
+      const data = await response.json()
+      console.log("Profile updated ✅", data);
+
+      const newUserData = await fetch('https://jiran-api.com/api/v1/auth/show', {
+        headers: {
+          Authorization: `Bearer ${token}`
         }
-      );
-    })
-    .then((secondResponse) => {
-      console.log("✅ Second API Response:", secondResponse.data);
-      const userData = secondResponse.data.data;
-      setAvatar(userData.avatar_path || null);
-      setBio(userData.bio || "");
-    })
-    .catch((error) => {
-      console.error("⛔ Error:", error);
-    });
-  };
+      })
+
+      if(!newUserData.ok){
+        console.error("❌ Error fetching user info");
+        return;
+      }
+
+      const userData  = await newUserData.json()
+      console.log("Updated user info:", userData.data);
+      console.log(userData.bio)
+      setBio(userData.bio);
+      setGender(userData.gender);
+      setSocialLinks(userData.socialLinks);
+      if (userData.avatar) setAvatar(userData.avatar);
+    }
+    
+    catch (error) {
+      console.log(error)
+    }
+  }
 
   return (
     <main className='container my-11'>
@@ -240,11 +249,15 @@ export default function DashboardEdit() {
               <div className='flex items-center justify-between gap-2 w-full'>
                 <div className='w-1/2'>
                   <label className='text-[var(--navy)]'>Latitude</label>
-                  <input type="text" value={lat ?? ""} className='border rounded px-3 py-2 border-gray-300 w-full' placeholder='-' />
+                  <input type="text" value={lat ?? ""} 
+                  onChange={(e) => setLat(Number(e.target.value))}
+                  className='border rounded px-3 py-2 border-gray-300 w-full' placeholder='-' />
                 </div>
                 <div className='w-1/2'>
                   <label className='text-[var(--navy)]'>Longitude</label>
-                  <input type="text" value={lng ?? ""} className='border rounded px-3 py-2 border-gray-300 w-full' placeholder='-' />
+                  <input type="text" value={lng ?? ""} 
+                  onChange={(e) => setLng(Number(e.target.value))}
+                  className='border rounded px-3 py-2 border-gray-300 w-full' placeholder='-' />
                 </div>
               </div>
 

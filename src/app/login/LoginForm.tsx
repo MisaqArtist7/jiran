@@ -35,7 +35,7 @@ export default function LoginForm() {
   console.log("Form data:", data);
 
   try {
-    const response = await fetch('/api/login', {
+    const response = await fetch('https://jiran-api.com/api/v1/auth/login', {
       method: 'POST',
       body: JSON.stringify(data),
       headers: { 'Content-Type': 'application/json' },

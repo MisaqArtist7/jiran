@@ -1,5 +1,4 @@
 'use client'
-
 import React, { useState, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { useRouter } from 'next/navigation'
@@ -8,7 +7,6 @@ import { z } from 'zod'
 import Link from 'next/link'  
 import { EnvelopeIcon, UserIcon, KeyIcon } from '@heroicons/react/24/outline'
 import Image from 'next/image'
-
 import './register.css'
 
 const signUpSchema = z.object({
@@ -59,7 +57,7 @@ export default function SignUpFormComponent() {
     setPending(true)
 
     try { // block: maybe someting went wrong
-      const response = await fetch('/api/register', { // connect to server via api
+      const response = await fetch('https://jiran-api.com/api/v1/auth/register', { // connect to server via api 
         method: 'POST',
         body: JSON.stringify({ ...data, ...location }), // convert object to json
         headers: { 'Content-Type': 'application/json' },

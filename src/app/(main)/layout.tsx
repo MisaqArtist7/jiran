@@ -4,7 +4,8 @@ import Header from '@/components/shared/Header/Header'
 import Footer from '@/components/shared/Footer/Footer'
 
 export const metadata: Metadata = {
-  title: 'Home | Jiran Compony'
+  title: "Home | Jiran",
+  description: "Connect locally and grow together.",
 }
 
 export default function MainLayout({ children }: { children: React.ReactNode }) {

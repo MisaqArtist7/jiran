@@ -14,6 +14,8 @@ export default function DashboardComponent() {
   const [username, setUsername] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [avatar, setAvatar] = useState<string | null>(null);
+  const [bio, setBio] = useState<string>("");
+  const [socialLinks, setSocialLinks] = useState<string>("");
 
 useEffect(() => {
   const token = localStorage.getItem("token");
@@ -27,7 +29,7 @@ useEffect(() => {
 
   const fetchData = async () => {
     try {
-      const response = await fetch("/api/dashboard", {
+      const response = await fetch('https://jiran-api.com/api/v1/auth/show', {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -39,10 +41,12 @@ useEffect(() => {
 
       if (response.ok) {
         console.log("📦 Full data:", data);
-        const userData = data.data.data; // ← این خط مهمه
+        const userData = data.data; // ← این خط مهمه
         setUsername(userData.name);
         setEmail(userData.email);
         setAvatar(userData.avatar_path ?? null);
+        setBio(userData.bio ?? "");
+        setSocialLinks(userData.socialLinks ?? "");
       } else {
         console.error("❌ Error:", data.message);
       }
@@ -90,7 +94,10 @@ useEffect(() => {
               New York, USA
             </h5>
             <p className="text-sm mt-1 text-gray-600 italic">
-              &quot;You can&apos;t kill someone who has already died.&quot;
+              {bio || "No bio yet..."}
+            </p>
+            <p className="text-sm mt-1 text-gray-600 italic">
+              {socialLinks || "No social links"}
             </p>
           </div>
           {/* user's social media */}
@@ -140,7 +147,7 @@ useEffect(() => {
           </div>
         </div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 text-sm pb-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 text-sm pb-4">
           <DashboardPost />
         </div>
       </section>

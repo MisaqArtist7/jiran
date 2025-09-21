@@ -55,7 +55,7 @@ export default function HomePage() {
             </div>
           ))}
         </section>
-
+          
         <section className="grid sm:grid-cols-2 md:grid-cols-3 gap-3 place-items-center my-11">
           {[
             { id: 1, src: "/images/CommunityBox.svg" },
