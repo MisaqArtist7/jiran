@@ -22,6 +22,7 @@ type LoginFormInputs = z.infer<typeof loginSchema>;
 
 // ------------------ Login Page Component ------------------
 export default function LoginForm() {
+
   const { register, handleSubmit, setError, formState: { errors }, } = useForm<LoginFormInputs>({ 
     resolver: zodResolver(loginSchema), 
   });

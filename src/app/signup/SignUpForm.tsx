@@ -65,7 +65,8 @@ export default function SignUpFormComponent() {
       const result = await response.json() // read server's response
 
       if (response.ok) {
-        localStorage.setItem('token', result.data.token)
+        const token = result.data.token
+        localStorage.setItem('token', token)
         router.push('/dashboard')
       } else {
         if (result.errors?.email) {

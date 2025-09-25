@@ -6,11 +6,11 @@ import LinkedinIcon from "@/components/icons/LinkedinIcon";
 import WhatsappIcon from "@/components/icons/WhatsappIcon";
 import InstagramIcon from "@/components/icons/InstagramIcon";
 import DashboardPost from "@/components/ui/DashboardPost/DashboardPost";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 
 export default function DashboardComponent() {
-
-
+  const router = useRouter();
   const [username, setUsername] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [avatar, setAvatar] = useState<string | null>(null);
@@ -20,8 +20,7 @@ export default function DashboardComponent() {
 useEffect(() => {
   const token = localStorage.getItem("token");
   if (!token) {
-    console.log("⛔ No token found!");
-    return; // don't proceed
+    router.push("/login");
   }
 
   const controller = new AbortController(); 
@@ -41,7 +40,7 @@ useEffect(() => {
 
       if (response.ok) {
         console.log("📦 Full data:", data);
-        const userData = data.data; // ← این خط مهمه
+        const userData = data.data;
         setUsername(userData.name);
         setEmail(userData.email);
         setAvatar(userData.avatar_path ?? null);
@@ -64,7 +63,7 @@ useEffect(() => {
   return () => {
     controller.abort(); 
   };
-}, []);
+}, [router]);
 
   return (
     <main className="container">
