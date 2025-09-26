@@ -42,24 +42,37 @@ export default function SignUpFormComponent() {
   const [locationError, setLocationError] = useState<string | null>(null)
   useEffect(() => {
     if (!navigator.geolocation) {
+      setLocation(null)
       setLocationError('Your browser does not support geolocation.')
+      return
     }
-    navigator.geolocation.getCurrentPosition(
-      (position) => setLocation({ loc_lat: position.coords.latitude, loc_lng: position.coords.longitude }),
-      () => setLocationError('Access to location was denied.')
+
+    navigator.geolocation.getCurrentPosition( (position) => {
+        setLocation({
+          loc_lat: position.coords.latitude,
+          loc_lng: position.coords.longitude,
+        })
+        setLocationError(null) 
+      },
+      () => {
+        setLocation(null)
+        setLocationError('Location not provided, you can continue without it.')
+      }
     )
   }, [])
 
+
   const onSubmit = async (data: SignUpFormInputs) => {
-    if (!location) {
-      setLocationError('Your browser does not support geolocation.')
-    }
     setPending(true)
 
     try { // block: maybe someting went wrong
+      const payload = location 
+        ? { ...data, ...location }
+        : { ...data } 
+
       const response = await fetch('https://jiran-api.com/api/v1/auth/register', { // connect to server via api 
         method: 'POST',
-        body: JSON.stringify({ ...data, ...location }), // convert object to json
+        body: JSON.stringify(payload), // convert object to json
         headers: { 'Content-Type': 'application/json' },
       })
       const result = await response.json() // read server's response
